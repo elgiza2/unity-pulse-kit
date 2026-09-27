@@ -77,6 +77,7 @@ import {
   RestorePurchasePage,
   NotFoundPage,
   SplashTestPage,
+  TestAgentPage,
 } from "./lazyPages";
 
 const toChat = <RetiredRedirect to="/chat" />;
