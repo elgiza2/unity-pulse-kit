@@ -86,3 +86,4 @@
 - [ ] Arabic visitors: show prices in local currency detected from the device locale/timezone.
 - [x] Local currency beside USD prices (device country) — desktop + mobile pricing.
 - [x] Facebook-style next-hop prefetch replaces bulk chunk warming; loading fallback removed.
+- menu anchoring + remove icons (user request)
