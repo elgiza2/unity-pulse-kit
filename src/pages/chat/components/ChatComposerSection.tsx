@@ -9,7 +9,7 @@ import { ComposerMobileModeBar } from "./ComposerMobileModeBar";
 import { ComposerAnimatedInput } from "./ComposerAnimatedInput";
 import { prewarmSendPath } from "../lib/prewarmSendPath";
 import ComposerServicePanel from "./ComposerServicePanel";
-import StarterCards, { StarterChips } from "./StarterCards";
+import StarterCards, { StarterChips, STARTER_CARDS } from "./StarterCards";
 
 import { ComposerComputerProvider } from "@/components/chat/ComposerComputerContext";
 import ComputerRunViewport from "@/components/chat/ComputerRunViewport";
@@ -58,6 +58,7 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
   const d = props.desktopModeChipsProps as any;
   const value = String(c.input ?? "");
   const send = () => { if (value.trim() || props.attachedFiles.length > 0) void c.handleSend(value); };
+  const activeCard = STARTER_CARDS.find((card) => card.mode === d.chatMode);
   return (
     <section className="desktop-fastshot-empty" aria-label="Start a new chat">
       <video className="desktop-fastshot-video" autoPlay muted loop playsInline poster={EMPTY_VIDEO_POSTER} aria-hidden="true"><source src={EMPTY_VIDEO} type="video/mp4" /></video>
@@ -70,18 +71,26 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
         <main className="desktop-fastshot-hero">
           <h1>Describe anything. Megsy will build it.</h1>
           <form className="desktop-fastshot-card" onSubmit={(event) => { event.preventDefault(); send(); }}>
-            <textarea value={value} onChange={(event) => c.setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send(); } }} placeholder="Build a fintech tracking app with bank level privacy and..." aria-label="Message Megsy" rows={1} />
+            <textarea value={value} onChange={(event) => { c.setInput(event.target.value); const t = event.currentTarget; t.style.height = "auto"; t.style.height = `${Math.min(t.scrollHeight, 240)}px`; }} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send(); } }} placeholder="Build a fintech tracking app with bank level privacy and..." aria-label="Message Megsy" rows={1} />
             {props.attachedFiles.length > 0 ? (
               <div className="desktop-fastshot-attachments">
                 {props.attachedFiles.map((f: any, i: number) => (
                   <span key={i} className="desktop-fastshot-attachment">
-                    {f?.name ?? `File ${i + 1}`}
+                    {f?.type === "image" && f?.data ? <img src={f.data} alt="" /> : null}
+                    <span className="fs-att-name">{f?.name ?? `File ${i + 1}`}</span>
                     <button type="button" aria-label="Remove attachment" onClick={() => props.removeAttachment(i)}>×</button>
                   </span>
                 ))}
               </div>
             ) : null}
             <div className="desktop-fastshot-tools">
+              {activeCard ? (
+                <span className="desktop-fastshot-mode">
+                  <activeCard.Icon className="h-4 w-4" />
+                  {activeCard.title}
+                  <button type="button" aria-label="Clear mode" onClick={() => d.handleModeChange?.("normal")}>×</button>
+                </span>
+              ) : null}
               <div className="desktop-fastshot-right">
                 <Button type="button" variant="ghost" className="desktop-fastshot-attach" aria-label="Attach files" onClick={() => { c.setPlusView("main"); c.setPlusMenuOpen(!c.plusMenuOpen); }}><Paperclip /></Button>
                 <Button type="submit" variant="neutral" className="desktop-fastshot-send" aria-label="Send message" disabled={!value.trim() && props.attachedFiles.length === 0}><ArrowUp /></Button>
@@ -89,7 +98,8 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
             </div>
             <div className="desktop-fastshot-menu-anchor">{props.plusMenuOpen ? props.renderPlusMenu() : null}</div>
           </form>
-          <StarterChips className="desktop-fastshot-starters" onPick={(prompt, mode) => { if (mode) d.handleModeChange?.(mode); if (prompt) c.setInput(prompt); }} />
+          <StarterChips className="desktop-fastshot-starters" activeMode={d.chatMode} onPick={(_prompt, mode) => { if (mode) d.handleModeChange?.(d.chatMode === mode ? "normal" : mode); }} />
+
         </main>
       </div>
     </section>
