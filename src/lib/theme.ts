@@ -96,7 +96,6 @@ const runThemeTransition = (oldAccent: string, newBackground: string): void => {
 };
 
 export const setTheme = (mode: ThemeMode): void => {
-  const before = resolveTheme(mode, window.location.pathname);
   const after = resolveTheme(mode, window.location.pathname);
   const current = document.documentElement.getAttribute("data-theme");
   const oldAccent = probeColor("hsl(var(--primary))");
@@ -110,7 +109,7 @@ export const setTheme = (mode: ThemeMode): void => {
   window.dispatchEvent(new CustomEvent("megsy:theme", { detail: mode }));
 
   // Only animate when the paint actually flips (e.g. light → dark).
-  if (current && current !== after && before === after) {
+  if (current && current !== after) {
     const newBackground = probeColor("hsl(var(--background))");
     runThemeTransition(oldAccent, newBackground);
   }
