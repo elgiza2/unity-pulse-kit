@@ -1,6 +1,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUp, ChevronDown, Paperclip } from "lucide-react";
 import ComposerAttachments from "./ComposerAttachments";
 import { RemoteAiBusyBanner } from "./RemoteAiBusyBanner";
 import { MentionDropdown } from "./MentionDropdown";
@@ -13,6 +14,9 @@ import StarterCards, { StarterChips } from "./StarterCards";
 import { ComposerComputerProvider } from "@/components/chat/ComposerComputerContext";
 import ComputerRunViewport from "@/components/chat/ComputerRunViewport";
 import { useComputerLiveView } from "@/lib/computer/liveView";
+import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/brand/BrandLogo";
+import ComposerModelMenu from "../ComposerModelMenu";
 
 import type { AttachedFile } from "../hooks/useAttachments";
 
@@ -45,6 +49,51 @@ interface ChatComposerSectionProps {
   composerRef?: React.Ref<HTMLDivElement>;
   /** Image-mode tools strip (upload / background removal / characters). */
   imageTools?: ReactNode;
+}
+
+const EMPTY_VIDEO = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_124724_bc041163-d651-425f-aea3-2acc1efc2c96.mp4";
+
+function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps }) {
+  const c = props.composerAnimatedInputProps as any;
+  const d = props.desktopModeChipsProps as any;
+  const value = String(c.input ?? "");
+  const send = () => { if (value.trim() || props.attachedFiles.length > 0) void c.handleSend(value); };
+  return (
+    <section className="desktop-fastshot-empty" aria-label="Start a new chat">
+      <video className="desktop-fastshot-video" autoPlay muted loop playsInline aria-hidden="true"><source src={EMPTY_VIDEO} type="video/mp4" /></video>
+      <div className="desktop-fastshot-shade" aria-hidden="true" />
+      <div className="desktop-fastshot-frame">
+        <header className="desktop-fastshot-nav">
+          <a className="desktop-fastshot-brand" href="/" aria-label="Megsy home"><BrandLogo className="desktop-fastshot-mark" /><span>Megsy</span></a>
+          <nav className="desktop-fastshot-links" aria-label="Primary navigation"><a href="/chat">Chat</a><a href="/images">Images</a><a href="/pricing">Pricing</a><a href="/docs">Docs</a></nav>
+          <Button className="desktop-fastshot-cta" onClick={() => props.navigate("/pricing")}>Upgrade</Button>
+        </header>
+        <main className="desktop-fastshot-hero">
+          <h1>Describe anything. Megsy will build it.</h1>
+          <form className="desktop-fastshot-card" onSubmit={(event) => { event.preventDefault(); send(); }}>
+            <textarea value={value} onChange={(event) => c.setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send(); } }} placeholder="Build a fintech tracking app with bank level privacy and..." aria-label="Message Megsy" rows={1} />
+            <div className="desktop-fastshot-tools">
+              <div className="desktop-fastshot-chips">
+                <Button type="button" variant="ghost" onClick={() => d.handleModeChange?.("images")}><span className="desktop-fastshot-chip-dot" />Images</Button>
+                <Button type="button" variant="ghost" onClick={() => d.handleModeChange?.("slides")}><span className="desktop-fastshot-chip-dot" />Slides</Button>
+                <Button type="button" variant="ghost" onClick={() => d.handleModeChange?.("deep-research")}><span className="desktop-fastshot-chip-dot" />Research</Button>
+              </div>
+              <div className="desktop-fastshot-right">
+                <div className="desktop-fastshot-model">
+                  <ComposerModelMenu mode={c.chatMode} open={c.tierMenuOpen} onOpenChange={c.setTierMenuOpen} side="top" align="end" selectedModel={c.selectedModel} megsyTier={c.megsyTier} userPlan={c.userPlan || "free"} mediaModel={c.mediaModel} onTierSelect={(tier) => { c.setSelectedModel(null); c.setMegsyTier(tier); }} onChatModelSelect={(model) => c.setSelectedModel(model)} onMediaModelSelect={c.setMediaModel} onModeChange={c.handleModeChange} noIcon renderMobileSheet={false} triggerClassName="desktop-fastshot-model-trigger" />
+                  <ChevronDown aria-hidden="true" />
+                </div>
+                <Button type="button" variant="ghost" className="desktop-fastshot-attach" aria-label="Attach files" onClick={() => { c.setPlusView("main"); c.setPlusMenuOpen(!c.plusMenuOpen); }}><Paperclip /></Button>
+                <Button type="submit" variant="neutral" className="desktop-fastshot-send" aria-label="Send message" disabled={!value.trim() && props.attachedFiles.length === 0}><ArrowUp /></Button>
+              </div>
+            </div>
+            <div className="desktop-fastshot-menu-anchor">{props.plusMenuOpen ? props.renderPlusMenu() : null}</div>
+          </form>
+        </main>
+        <footer className="desktop-fastshot-proof"><p>One workspace for ideas, research, media and code</p><div aria-label="Megsy capabilities"><span>CHAT</span><span>RESEARCH</span><span>IMAGES</span></div></footer>
+      </div>
+    </section>
+  );
 }
 
 /**
@@ -120,6 +169,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
 
   return (
     <ComposerComputerProvider>
+    {isDesktopLanding ? <DesktopFastshotComposer props={props} /> : null}
     <div
       style={{
         ["--sb-left" as any]: (sidebarOffset ?? (sidebarCollapsed ? 56 : 260)) + "px",
@@ -127,7 +177,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
       }}
       className={`chat-composer-dock fixed end-0 bottom-[var(--kb-offset,0px)] z-30 px-2 md:px-6 pb-[calc(env(safe-area-inset-bottom)+0.5rem)] md:pb-[calc(env(safe-area-inset-bottom)+1.25rem)] pt-3 md:pt-6 pointer-events-none transition-[inset-inline-start,top,bottom,transform] duration-[520ms] bg-transparent will-change-transform ${
         isDesktopLanding
-          ? "md:top-0 md:bottom-0 md:flex md:items-center md:justify-center md:bg-transparent md:backdrop-blur-0 md:border-0 md:overflow-visible"
+          ? "md:hidden"
           : "md:bg-transparent md:backdrop-blur-0 md:border-0"
       }`}
     >

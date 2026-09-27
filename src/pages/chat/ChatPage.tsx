@@ -2814,7 +2814,7 @@ const ChatPage = () => {
             backgroundColor: "transparent",
             borderRightColor: "transparent",
           }}
-          className="theme-fixed relative z-40 hidden md:flex shrink-0 overflow-hidden border-e transition-[width,min-width,flex-basis] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className={`theme-fixed relative z-40 shrink-0 overflow-hidden border-e transition-[width,min-width,flex-basis] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${showDesktopEmptyVideo ? "hidden" : "hidden md:flex"}`}
         >
           <AppSidebar
             inline
