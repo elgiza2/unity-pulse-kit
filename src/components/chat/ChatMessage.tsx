@@ -1899,6 +1899,43 @@ const ChatMessage = ({
               })()
             )}
 
+            {/* Generated / inline images — shown AFTER the text so the flow
+                reads: text → image result → action buttons. */}
+            {(() => {
+              // Hosts that block hot-linking (broken image icon in chat).
+              const BLOCKED_IMG_HOSTS =
+                /(^|\.)(tiktok\.com|instagram\.com|cdninstagram\.com|fbcdn\.net|lookaside\.instagram\.com|facebook\.com|x\.com|twitter\.com|twimg\.com)$/i;
+              const isUsable = (u: string) => {
+                try {
+                  const h = new URL(u).hostname;
+                  return !BLOCKED_IMG_HOSTS.test(h);
+                } catch {
+                  return false;
+                }
+              };
+              const allImages = [...(images || []), ...inlineImages].filter(isUsable);
+              const dedupImages = allImages.filter((u, i, a) => a.indexOf(u) === i);
+              return (
+                dedupImages.length > 0 && (
+                  <div className="flex flex-col gap-3 mt-3 w-full max-w-[42rem]">
+                    {dedupImages.map((img, i) => (
+                      <img decoding="async"
+                        key={i}
+                        src={img}
+                        alt=""
+                        loading="lazy"
+                        className="w-full max-h-[70vh] rounded-xl border border-border/40 object-contain bg-card/30 cursor-pointer hover:opacity-90 transition-opacity"
+                        onClick={() => setPreviewImageUrl(img)}
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    ))}
+                  </div>
+                )
+              );
+            })()}
+
             {/* Sources + Thinking buttons */}
             {!isStreaming && sourceLinks.length > 0 && (
               <div className="mt-3 pt-3 border-t border-border/40 flex flex-wrap items-center gap-2">
