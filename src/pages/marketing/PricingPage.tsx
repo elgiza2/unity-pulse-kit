@@ -390,13 +390,16 @@ const PricingPage = () => {
         <Helmet>
           <script type="application/ld+json">{JSON.stringify(pricingLd)}</script>
         </Helmet>
-        <MobilePushShell
-          open={mobileOpen}
-          onOpenChange={setMobileOpen}
-          onNewChat={() => navigate("/")}
-          currentMode="chat"
-        >
-          <MobilePricingScreen
+        {/* Same overlay sidebar the chat page uses on mobile. */}
+        <div className="md:hidden">
+          <AppSidebar
+            open={mobileOpen}
+            onClose={() => setMobileOpen(false)}
+            onNewChat={() => navigate("/")}
+            currentMode="chat"
+          />
+        </div>
+        <MobilePricingScreen
             isYearly={isYearly}
             onToggleYearly={setIsYearly}
             loadingTier={loadingTier}
