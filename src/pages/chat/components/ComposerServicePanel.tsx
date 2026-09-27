@@ -1,7 +1,8 @@
 import { lazy, Suspense, useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, ImageIcon, Video, X } from "lucide-react";
 import { findSlidesTemplate } from "@/lib/slidesTemplates";
 import type { MediaModelChoice } from "@/components/chat/media/MediaModelPickerSheet";
+import { BrandIcon, hasBrandIcon } from "@/components/chat/media/BrandIcon";
 
 const MediaModelPickerSheet = lazy(
   () => import("@/components/chat/media/MediaModelPickerSheet"),
@@ -81,6 +82,8 @@ export default function ComposerServicePanel({
             ? "عروض"
             : "Slides"
           : "");
+  const MediaIcon = isVideo ? Video : ImageIcon;
+  const modelHasBrandIcon = mediaModel ? hasBrandIcon(mediaModel.name, mediaModel.provider) : false;
 
   return (
     <div
@@ -99,6 +102,15 @@ export default function ComposerServicePanel({
           aria-haspopup="dialog"
           className={pickerButtonClass}
         >
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-md bg-foreground/[0.07]">
+            {mediaModel?.thumbnail ? (
+              <img src={mediaModel.thumbnail} alt="" className="h-full w-full object-cover" />
+            ) : modelHasBrandIcon && mediaModel ? (
+              <BrandIcon name={mediaModel.name} provider={mediaModel.provider} variant="color" size={16} />
+            ) : (
+              <MediaIcon className="h-3.5 w-3.5 text-foreground/65" />
+            )}
+          </span>
           <span className="min-w-0 truncate">
             {mediaModel?.name || (isArabicUi ? (isVideo ? "موديل فيديو" : "موديل صور") : isVideo ? "Video model" : "Image model")}
           </span>

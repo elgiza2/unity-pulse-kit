@@ -9,7 +9,7 @@ import { ComposerMobileModeBar } from "./ComposerMobileModeBar";
 import { ComposerAnimatedInput } from "./ComposerAnimatedInput";
 import { prewarmSendPath } from "../lib/prewarmSendPath";
 import ComposerServicePanel from "./ComposerServicePanel";
-import StarterCards, { StarterChips, STARTER_CARDS } from "./StarterCards";
+import StarterCards, { StarterChips } from "./StarterCards";
 
 import { ComposerComputerProvider } from "@/components/chat/ComposerComputerContext";
 import ComputerRunViewport from "@/components/chat/ComputerRunViewport";
@@ -58,7 +58,7 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
   const d = props.desktopModeChipsProps as any;
   const value = String(c.input ?? "");
   const send = () => { if (value.trim() || props.attachedFiles.length > 0) void c.handleSend(value); };
-  const activeCard = STARTER_CARDS.find((card) => card.mode === d.chatMode);
+  const hasActiveMode = Boolean(d.chatMode && d.chatMode !== "normal");
   return (
     <section className="desktop-fastshot-empty" aria-label="Start a new chat">
       <video className="desktop-fastshot-video" autoPlay muted loop playsInline poster={EMPTY_VIDEO_POSTER} aria-hidden="true"><source src={EMPTY_VIDEO} type="video/mp4" /></video>
@@ -71,6 +71,19 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
         <main className="desktop-fastshot-hero">
           <h1>Describe anything. Megsy will build it.</h1>
           <form className="desktop-fastshot-card" onSubmit={(event) => { event.preventDefault(); send(); }}>
+            {hasActiveMode ? (
+              <div className="desktop-fastshot-service-bar">
+                <ComposerServicePanel
+                  chatMode={d.chatMode}
+                  mediaModel={d.mediaModel ?? null}
+                  setMediaModel={d.setMediaModel}
+                  slidesTemplate={d.slidesTemplate}
+                  onOpenTemplatePicker={() => d.setSlidesPickerOpen?.(true)}
+                  onClear={() => d.handleModeChange?.("normal")}
+                />
+                {(d.chatMode === "images" || d.chatMode === "video") && props.imageTools ? props.imageTools : null}
+              </div>
+            ) : null}
             <textarea value={value} onChange={(event) => { c.setInput(event.target.value); const t = event.currentTarget; t.style.height = "auto"; t.style.height = `${Math.min(t.scrollHeight, 240)}px`; }} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send(); } }} placeholder="Build a fintech tracking app with bank level privacy and..." aria-label="Message Megsy" rows={1} />
             {props.attachedFiles.length > 0 ? (
               <div className="desktop-fastshot-attachments">
@@ -84,13 +97,6 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
               </div>
             ) : null}
             <div className="desktop-fastshot-tools">
-              {activeCard ? (
-                <span className="desktop-fastshot-mode">
-                  <activeCard.Icon className="h-4 w-4" />
-                  {activeCard.title}
-                  <button type="button" aria-label="Clear mode" onClick={() => d.handleModeChange?.("normal")}>×</button>
-                </span>
-              ) : null}
               <div className="desktop-fastshot-right">
                 <Button type="button" variant="ghost" className="desktop-fastshot-attach" aria-label="Attach files" onClick={() => { c.setPlusView("main"); c.setPlusMenuOpen(!c.plusMenuOpen); }}><Paperclip /></Button>
                 <Button type="submit" variant="neutral" className="desktop-fastshot-send" aria-label="Send message" disabled={!value.trim() && props.attachedFiles.length === 0}><ArrowUp /></Button>

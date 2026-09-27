@@ -53,7 +53,7 @@
 - Image models route through `anything-api`; slides cards render the real first slide.
 
 ## Open
-- [ ] Desktop first chat screen: keep composer text and placeholder clearly white.
+- [x] Desktop first chat screen: keep composer text and placeholder clearly white.
 - [x] Rebuild empty desktop chat (video, Megsy left, small Upgrade right, shortcuts under input; no nav links/footer).
 - [x] Restore the light chat palette, composer surface, chips, shadows, and serif greeting from the loving-bonds-app reference without changing chat behavior or the dark theme.
 - [x] Report the actual 48-person funnel: visit, signup start/completion, payment page/method, Vodafone Cash, and proof/order completion.
