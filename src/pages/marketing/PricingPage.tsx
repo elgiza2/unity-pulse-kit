@@ -411,7 +411,6 @@ const PricingPage = () => {
             }
             onMenuClick={() => setMobileOpen(true)}
           />
-        </MobilePushShell>
         <Suspense fallback={null}>
           {gatewaySheet && (
             <PaymentGatewaySheet
