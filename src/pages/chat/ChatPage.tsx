@@ -2644,7 +2644,13 @@ const ChatPage = () => {
   const composerRef = useRef<HTMLDivElement>(null);
   const renderPlusMenu = () => {
     const openUp = hasConversation || messages.length > 0;
-    const r = composerRef.current?.getBoundingClientRect();
+    let r = composerRef.current?.getBoundingClientRect();
+    // On the empty desktop (fastshot) state the dock composer is hidden, so
+    // its rect is degenerate — anchor the menu to the glass input instead.
+    const fastshotCard = document.querySelector(".desktop-fastshot-card");
+    if (fastshotCard || !r || r.top <= 0 || r.height === 0) {
+      r = fastshotCard?.getBoundingClientRect() ?? r;
+    }
     if (isMobileViewport) {
       const vh = window.innerHeight;
       // Open the tools panel as a proper full-height drawer. The previous

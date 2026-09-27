@@ -1,7 +1,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, ChevronDown, Paperclip } from "lucide-react";
+import { ArrowUp, Paperclip } from "lucide-react";
 import ComposerAttachments from "./ComposerAttachments";
 import { RemoteAiBusyBanner } from "./RemoteAiBusyBanner";
 import { MentionDropdown } from "./MentionDropdown";
@@ -16,7 +16,6 @@ import ComputerRunViewport from "@/components/chat/ComputerRunViewport";
 import { useComputerLiveView } from "@/lib/computer/liveView";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/brand/BrandLogo";
-import ComposerModelMenu from "../ComposerModelMenu";
 
 import type { AttachedFile } from "../hooks/useAttachments";
 
@@ -51,7 +50,8 @@ interface ChatComposerSectionProps {
   imageTools?: ReactNode;
 }
 
-const EMPTY_VIDEO = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_124724_bc041163-d651-425f-aea3-2acc1efc2c96.mp4";
+const EMPTY_VIDEO = "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/4b73c700-3112-4c07-bd48-0af2893dff7c.mp4";
+const EMPTY_VIDEO_POSTER = "https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/0bf7409c-9fa2-4bef-a49d-34903dcc91ad.png";
 
 function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps }) {
   const c = props.composerAnimatedInputProps as any;
@@ -60,7 +60,7 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
   const send = () => { if (value.trim() || props.attachedFiles.length > 0) void c.handleSend(value); };
   return (
     <section className="desktop-fastshot-empty" aria-label="Start a new chat">
-      <video className="desktop-fastshot-video" autoPlay muted loop playsInline aria-hidden="true"><source src={EMPTY_VIDEO} type="video/mp4" /></video>
+      <video className="desktop-fastshot-video" autoPlay muted loop playsInline poster={EMPTY_VIDEO_POSTER} aria-hidden="true"><source src={EMPTY_VIDEO} type="video/mp4" /></video>
       <div className="desktop-fastshot-shade" aria-hidden="true" />
       <div className="desktop-fastshot-frame">
         <header className="desktop-fastshot-nav">
@@ -71,19 +71,25 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
           <h1>Describe anything. Megsy will build it.</h1>
           <form className="desktop-fastshot-card" onSubmit={(event) => { event.preventDefault(); send(); }}>
             <textarea value={value} onChange={(event) => c.setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send(); } }} placeholder="Build a fintech tracking app with bank level privacy and..." aria-label="Message Megsy" rows={1} />
+            {props.attachedFiles.length > 0 ? (
+              <div className="desktop-fastshot-attachments">
+                {props.attachedFiles.map((f: any, i: number) => (
+                  <span key={i} className="desktop-fastshot-attachment">
+                    {f?.name ?? `File ${i + 1}`}
+                    <button type="button" aria-label="Remove attachment" onClick={() => props.removeAttachment(i)}>×</button>
+                  </span>
+                ))}
+              </div>
+            ) : null}
             <div className="desktop-fastshot-tools">
               <div className="desktop-fastshot-right">
-                <div className="desktop-fastshot-model">
-                  <ComposerModelMenu mode={c.chatMode} open={c.tierMenuOpen} onOpenChange={c.setTierMenuOpen} side="top" align="end" selectedModel={c.selectedModel} megsyTier={c.megsyTier} userPlan={c.userPlan || "free"} mediaModel={c.mediaModel} onTierSelect={(tier) => { c.setSelectedModel(null); c.setMegsyTier(tier); }} onChatModelSelect={(model) => c.setSelectedModel(model)} onMediaModelSelect={c.setMediaModel} onModeChange={c.handleModeChange} noIcon renderMobileSheet={false} triggerClassName="desktop-fastshot-model-trigger" />
-                  <ChevronDown aria-hidden="true" />
-                </div>
                 <Button type="button" variant="ghost" className="desktop-fastshot-attach" aria-label="Attach files" onClick={() => { c.setPlusView("main"); c.setPlusMenuOpen(!c.plusMenuOpen); }}><Paperclip /></Button>
                 <Button type="submit" variant="neutral" className="desktop-fastshot-send" aria-label="Send message" disabled={!value.trim() && props.attachedFiles.length === 0}><ArrowUp /></Button>
               </div>
             </div>
             <div className="desktop-fastshot-menu-anchor">{props.plusMenuOpen ? props.renderPlusMenu() : null}</div>
           </form>
-          <StarterChips className="desktop-fastshot-starters" onPick={(_prompt, mode) => { if (mode) d.handleModeChange?.(mode); }} />
+          <StarterChips className="desktop-fastshot-starters" onPick={(prompt, mode) => { if (mode) d.handleModeChange?.(mode); if (prompt) c.setInput(prompt); }} />
         </main>
       </div>
     </section>
@@ -242,7 +248,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
 
             <div className="md:contents">
               <div ref={composerRef as any} className="relative z-[8] pointer-events-auto md:p-[1px] md:rounded-[28px]">
-                {plusMenuOpen ? renderPlusMenu() : null}
+                {plusMenuOpen && (!isDesktopLanding || isMobileViewport) ? renderPlusMenu() : null}
                 <div className="md:rounded-[27px] md:overflow-hidden">
 
 

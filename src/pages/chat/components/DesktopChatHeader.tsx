@@ -122,7 +122,7 @@ export function DesktopChatHeader(props: DesktopChatHeaderProps) {
           onChatModelSelect={(model) => props.setSelectedModel({ id: model.id, label: model.label, cost: 0 })}
           onMediaModelSelect={props.setMediaModel}
           onModeChange={props.setChatMode}
-          renderMobileSheet={false}
+          forceMobileSheet
         />
       </div>
 
