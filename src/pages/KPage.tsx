@@ -164,7 +164,7 @@ const KPage = () => {
         </div>
         <div className="pt-2">
           <div className="mb-1.5 px-1 text-[12px] font-medium text-foreground/60">
-            Runway Dev — صور
+            Runway Dev — فيديو
           </div>
           <Field
             name="w"
@@ -176,7 +176,7 @@ const KPage = () => {
         </div>
         <div className="pt-2">
           <div className="mb-1.5 px-1 text-[12px] font-medium text-foreground/60">
-            موقع الصور والفيديو (WaveSpeed)
+            WaveSpeed — صور
           </div>
           <Field
             name="ws"
