@@ -117,11 +117,11 @@ export default function ComposerModelMenu({
       // the menu should rise above it instead of being pushed off-screen below.
       const placeAbove = side === "top" || r.bottom > vh * 0.55;
       if (placeAbove) {
-        const bottom = vh - r.top + 10;
+        const bottom = vh - r.top + 6;
         const maxHeight = Math.min(cap, Math.max(220, r.top - 24));
         setPos({ left, width, bottom, maxHeight });
       } else {
-        const top = r.bottom + 10;
+        const top = r.bottom + 6;
         const maxHeight = Math.min(cap, Math.max(220, vh - top - 24));
         setPos({ left, width, top, maxHeight });
       }
@@ -397,16 +397,6 @@ export default function ComposerModelMenu({
                           }}
                           className="group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all hover:bg-foreground/[0.07]"
                         >
-                          <span
-                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-                            style={{
-                              background: active
-                                ? "hsl(var(--primary) / 0.16)"
-                                : "hsl(var(--foreground) / 0.06)",
-                            }}
-                          >
-                            <ComposerModelIcon brand={item.brand} />
-                          </span>
                           <span className="min-w-0 flex-1">
                             <span className="flex items-center gap-1.5">
                               <span className="block text-[13.5px] font-semibold leading-tight truncate tracking-tight text-foreground">
