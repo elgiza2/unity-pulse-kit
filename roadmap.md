@@ -53,7 +53,7 @@
 - Image models route through `anything-api`; slides cards render the real first slide.
 
 ## Open
-- [ ] Rebuild empty desktop chat with a cinematic layout while keeping mobile independent; signed-in visual verification remains.
+- [x] Rebuild empty desktop chat (video, Megsy left, small Upgrade right, shortcuts under input; no nav links/footer).
 - [x] Restore the light chat palette, composer surface, chips, shadows, and serif greeting from the loving-bonds-app reference without changing chat behavior or the dark theme.
 - [x] Report the actual 48-person funnel: visit, signup start/completion, payment page/method, Vodafone Cash, and proof/order completion.
 - [ ] Track each page view's visitor country.
