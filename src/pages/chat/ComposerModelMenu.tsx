@@ -45,6 +45,8 @@ interface Props {
   settingsLabel?: string;
   /** Desktop header instances must not create a mobile portal while hidden by CSS. */
   renderMobileSheet?: boolean;
+  /** Force the mobile sheet design even on desktop viewports. */
+  forceMobileSheet?: boolean;
   /** Extra classes for the trigger button. */
   triggerClassName?: string;
 }
@@ -69,6 +71,7 @@ export default function ComposerModelMenu({
   settingsPanel,
   settingsLabel = "Settings",
   renderMobileSheet = true,
+  forceMobileSheet = false,
   triggerClassName,
 }: Props) {
   const [view, setView] = useState<"models" | "more" | "settings">("models");
@@ -92,6 +95,7 @@ export default function ComposerModelMenu({
     return () => window.removeEventListener("megsy:chat-model-preferences", handler);
   }, [open]);
   const isMobile = useIsMobile();
+  const useSheet = isMobile || forceMobileSheet;
   const btnRef = useRef<HTMLButtonElement>(null);
   const [pos, setPos] = useState<
     { left: number; width: number; top?: number; bottom?: number; maxHeight: number } | null
@@ -180,7 +184,7 @@ export default function ComposerModelMenu({
       </button>
 
       {/* MOBILE — anchored dropdown card */}
-      {renderMobileSheet && isMobile && typeof document !== "undefined" &&
+      {renderMobileSheet && useSheet && typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
             {open && pos && (
@@ -287,7 +291,7 @@ export default function ComposerModelMenu({
         )}
 
       {/* DESKTOP — floating dropdown */}
-      {!isMobile && typeof document !== "undefined" &&
+      {!useSheet && typeof document !== "undefined" &&
         createPortal(
           <AnimatePresence>
             {open && pos && (
