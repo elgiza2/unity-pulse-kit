@@ -1,0 +1,20 @@
+{
+  "source": "https://github.com/elgiza2/loving-bonds-app",
+  "scope": "chat light-theme visual reference only",
+  "capabilities": [
+    {
+      "capability": "Chat light-theme presentation",
+      "source": "old repository CSS and chat components",
+      "outcome": "reuse only the proven visual rules while preserving current chat behavior",
+      "status": "verified",
+      "next_action": "none"
+    },
+    {
+      "capability": "Backend, authentication, records, integrations, and routes",
+      "source": "current Megsy project",
+      "outcome": "unchanged",
+      "status": "preserve",
+      "next_action": "none"
+    }
+  ]
+}
