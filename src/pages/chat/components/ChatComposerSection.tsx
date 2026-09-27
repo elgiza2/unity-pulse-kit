@@ -73,11 +73,6 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
           <form className="desktop-fastshot-card" onSubmit={(event) => { event.preventDefault(); send(); }}>
             <textarea value={value} onChange={(event) => c.setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send(); } }} placeholder="Build a fintech tracking app with bank level privacy and..." aria-label="Message Megsy" rows={1} />
             <div className="desktop-fastshot-tools">
-              <div className="desktop-fastshot-chips">
-                <Button type="button" variant="ghost" onClick={() => d.handleModeChange?.("images")}><span className="desktop-fastshot-chip-dot" />Images</Button>
-                <Button type="button" variant="ghost" onClick={() => d.handleModeChange?.("slides")}><span className="desktop-fastshot-chip-dot" />Slides</Button>
-                <Button type="button" variant="ghost" onClick={() => d.handleModeChange?.("deep-research")}><span className="desktop-fastshot-chip-dot" />Research</Button>
-              </div>
               <div className="desktop-fastshot-right">
                 <div className="desktop-fastshot-model">
                   <ComposerModelMenu mode={c.chatMode} open={c.tierMenuOpen} onOpenChange={c.setTierMenuOpen} side="top" align="end" selectedModel={c.selectedModel} megsyTier={c.megsyTier} userPlan={c.userPlan || "free"} mediaModel={c.mediaModel} onTierSelect={(tier) => { c.setSelectedModel(null); c.setMegsyTier(tier); }} onChatModelSelect={(model) => c.setSelectedModel(model)} onMediaModelSelect={c.setMediaModel} onModeChange={c.handleModeChange} noIcon renderMobileSheet={false} triggerClassName="desktop-fastshot-model-trigger" />
