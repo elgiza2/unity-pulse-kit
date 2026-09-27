@@ -1,9 +1,6 @@
-/* Theme switch transition — new theme color sweeps in from the edges toward
-   the center, while the word "ميغسي" in the OLD theme's accent color fades
-   out with expanding letter margins. Driven by src/lib/theme.ts. */
-
-/* Mask gradient stops can't interpolate directly, so the sweep is driven by
-   animating a registered custom property inside the gradient. */
+/* Theme switch: the OLD theme covers the screen, then shrinks from the edges
+   to the center revealing the new theme. "ميغسي" in the old accent fades out
+   with expanding letter spacing. Driven by src/lib/theme.ts. */
 @property --theme-sweep-p {
   syntax: "<percentage>";
   inherits: false;
@@ -13,80 +10,42 @@
 .theme-sweep-overlay {
   position: fixed;
   inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  z-index: 2147483646;
   pointer-events: none;
   --theme-sweep-p: 150%;
-  -webkit-mask-image: radial-gradient(
-    circle at 50% 50%,
-    transparent var(--theme-sweep-p),
-    #000 var(--theme-sweep-p)
-  );
-  mask-image: radial-gradient(
-    circle at 50% 50%,
-    transparent var(--theme-sweep-p),
-    #000 var(--theme-sweep-p)
-  );
-  animation: theme-sweep-close 0.65s cubic-bezier(0.65, 0, 0.35, 1) forwards,
-    theme-sweep-out 0.35s ease 0.8s forwards;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 var(--theme-sweep-p), transparent calc(var(--theme-sweep-p) + 1%));
+  mask-image: radial-gradient(circle at 50% 50%, #000 var(--theme-sweep-p), transparent calc(var(--theme-sweep-p) + 1%));
+  animation: theme-sweep-close 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
 @keyframes theme-sweep-close {
-  from {
-    --theme-sweep-p: 150%;
-  }
-  to {
-    --theme-sweep-p: -1%;
-  }
+  from { --theme-sweep-p: 150%; }
+  to { --theme-sweep-p: 0%; }
 }
 
-@keyframes theme-sweep-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-/* Browsers without @property (older Safari/Firefox): fall back to a simple
-   fade so the transition still looks clean instead of snapping. */
-@supports not (background: var(--theme-sweep-p)) {
-  .theme-sweep-overlay {
-    animation: theme-sweep-out 0.35s ease 0.45s forwards;
-  }
+@supports not (background: paint(x)) {
+  /* no-op guard; @property unsupported browsers fall back below */
 }
 
 .theme-sweep-word {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 2147483647;
+  pointer-events: none;
   font-weight: 700;
-  font-size: clamp(2rem, 6vw, 3.5rem);
-  letter-spacing: 0.02em;
-  animation: theme-word-fade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  will-change: opacity, letter-spacing, transform;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  animation: theme-word-fade 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes theme-word-fade {
-  0% {
-    opacity: 0;
-    letter-spacing: 0.02em;
-    transform: scale(0.96);
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    letter-spacing: 0.45em;
-    transform: scale(1.04);
-  }
+  0% { opacity: 1; letter-spacing: 0.02em; }
+  45% { opacity: 1; letter-spacing: 0.05em; }
+  100% { opacity: 0; letter-spacing: 0.5em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .theme-sweep-overlay,
-  .theme-sweep-word {
-    animation-duration: 0.01s !important;
-    animation-delay: 0s !important;
-  }
+  .theme-sweep-overlay, .theme-sweep-word { animation-duration: 0.01s !important; }
 }

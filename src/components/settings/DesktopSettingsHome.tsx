@@ -116,11 +116,9 @@ export function DesktopSettingsHome() {
           icon: (p) => (themeMode === "dark" ? <MoonIcon {...p} /> : <SunIcon {...p} />),
           label: tx("Appearance"),
           control: "switch",
-          trailing:
-            themeMode === "dark" ? tx("Dark") : themeMode === "system" ? tx("System") : tx("Light"),
+          trailing: themeMode === "dark" ? tx("Dark") : tx("Light"),
           onClick: () => {
-            const next: ThemeMode =
-              themeMode === "light" ? "dark" : themeMode === "dark" ? "system" : "light";
+            const next: ThemeMode = themeMode === "dark" ? "light" : "dark";
             setThemeMode(next);
             setTheme(next);
           },

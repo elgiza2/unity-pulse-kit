@@ -80,25 +80,30 @@ const probeColor = (cssValue: string): string => {
  * screen edges while "ميغسي" — painted in the OLD theme's accent color —
  * fades out with expanding letter margins.
  */
-const runThemeTransition = (oldAccent: string, newBackground: string): void => {
+const runThemeTransition = (oldAccent: string, oldBackground: string): void => {
+  document.querySelectorAll(".theme-sweep-overlay,.theme-sweep-word").forEach((n) => n.remove());
   const overlay = document.createElement("div");
   overlay.className = "theme-sweep-overlay";
-  overlay.style.background = newBackground;
+  overlay.style.background = oldBackground;
 
   const word = document.createElement("span");
   word.className = "theme-sweep-word";
   word.style.color = oldAccent;
   word.textContent = "ميغسي";
-  overlay.appendChild(word);
 
   document.body.appendChild(overlay);
-  window.setTimeout(() => overlay.remove(), 1400);
+  document.body.appendChild(word);
+  window.setTimeout(() => {
+    overlay.remove();
+    word.remove();
+  }, 1500);
 };
 
 export const setTheme = (mode: ThemeMode): void => {
   const after = resolveTheme(mode, window.location.pathname);
   const current = document.documentElement.getAttribute("data-theme");
   const oldAccent = probeColor("hsl(var(--primary))");
+  const oldBackground = probeColor("hsl(var(--background))");
 
   try {
     localStorage.setItem(THEME_STORAGE_KEY, mode);
@@ -110,8 +115,7 @@ export const setTheme = (mode: ThemeMode): void => {
 
   // Only animate when the paint actually flips (e.g. light → dark).
   if (current && current !== after) {
-    const newBackground = probeColor("hsl(var(--background))");
-    runThemeTransition(oldAccent, newBackground);
+    runThemeTransition(oldAccent, oldBackground);
   }
 };
 
