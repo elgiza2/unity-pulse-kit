@@ -9,7 +9,6 @@ import type { MediaModelChoice } from "@/components/chat/media/MediaModelPickerS
 import type { ChatMode } from "./chatConstants";
 import {
   CHAT_COMPOSER_MODEL_OPTIONS,
-  ComposerModelIcon,
   getChatModelDisplayLabel,
 } from "./chatConstants";
 
