@@ -97,6 +97,7 @@ export default function ComposerModelMenu({
   const isMobile = useIsMobile();
   const useSheet = isMobile || forceMobileSheet;
   const btnRef = useRef<HTMLButtonElement>(null);
+  const instanceId = useRef(Math.random().toString(36).slice(2)).current;
   const [pos, setPos] = useState<
     { left: number; width: number; top?: number; bottom?: number; maxHeight: number } | null
   >(null);
@@ -105,7 +106,15 @@ export default function ComposerModelMenu({
   useLayoutEffect(() => {
     if (!open || !btnRef.current) return;
     const update = () => {
-      const r = btnRef.current!.getBoundingClientRect();
+      const el = btnRef.current!;
+      const r = el.getBoundingClientRect();
+      // Several instances share the same open state (desktop header, phone
+      // header, media bar). Only the visible, last-tapped trigger may render.
+      const owner = (window as any).__megsyModelMenuOwner as string | undefined;
+      if ((r.width === 0 && r.height === 0) || (owner && owner !== instanceId)) {
+        setPos(null);
+        return;
+      }
       const vw = window.innerWidth;
       const vh = window.innerHeight;
       const isMobile = vw < 640;
@@ -162,7 +171,10 @@ export default function ComposerModelMenu({
       <button
         ref={btnRef}
         type="button"
-        onClick={() => onOpenChange(!open)}
+        onClick={() => {
+          (window as any).__megsyModelMenuOwner = instanceId;
+          onOpenChange(!open);
+        }}
         data-tier-trigger
         className={
           variant === "segment"

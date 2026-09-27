@@ -93,7 +93,6 @@ export function DesktopSettingsHome() {
         { icon: AppearanceIcon, label: tx("Composer"), path: "/settings/customization" },
         // Mail is hidden until its UI is reworked.
         // { icon: (p) => <Mail {...p} />, label: tx("Mail"), path: "/mail" },
-        { icon: (p) => <KeyRound {...p} />, label: tx("Passwords"), path: "/settings/passwords" },
         { icon: (p) => <Brain {...p} />, label: tx("Memory"), path: "/settings/memory" },
         { icon: IntegrationsIcon, label: tx("Integrations"), path: "/chat?integrations=1" },
         { icon: IntegrationsIcon, label: tx("MCP Servers"), path: "/settings/mcp" },
