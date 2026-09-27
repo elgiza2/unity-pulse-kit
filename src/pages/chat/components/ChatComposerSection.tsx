@@ -64,8 +64,7 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
       <div className="desktop-fastshot-shade" aria-hidden="true" />
       <div className="desktop-fastshot-frame">
         <header className="desktop-fastshot-nav">
-          <a className="desktop-fastshot-brand" href="/" aria-label="Megsy home"><BrandLogo className="desktop-fastshot-mark" /><span>Megsy</span></a>
-          <nav className="desktop-fastshot-links" aria-label="Primary navigation"><a href="/chat">Chat</a><a href="/images">Images</a><a href="/pricing">Pricing</a><a href="/docs">Docs</a></nav>
+          <a className="desktop-fastshot-brand" href="/" aria-label="Megsy home"><span>Megsy</span></a>
           <Button className="desktop-fastshot-cta" onClick={() => props.navigate("/pricing")}>Upgrade</Button>
         </header>
         <main className="desktop-fastshot-hero">
@@ -84,6 +83,7 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
             </div>
             <div className="desktop-fastshot-menu-anchor">{props.plusMenuOpen ? props.renderPlusMenu() : null}</div>
           </form>
+          <StarterChips className="desktop-fastshot-starters" onPick={(_prompt, mode) => { if (mode) d.handleModeChange?.(mode); }} />
         </main>
       </div>
     </section>
