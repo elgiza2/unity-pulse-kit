@@ -214,7 +214,7 @@ export default function AssistantMediaBlock({ msg, setMessages, setInput, setIsL
   if (!msg.mediaPlan) return null;
 
   return (
-    <div className="px-3 md:px-12 space-y-2">
+    <div className="space-y-2">
       <Suspense fallback={null}>
         {msg.mediaResults && msg.mediaResults.length > 0 && (
           <MediaResultCard

@@ -1663,22 +1663,6 @@ const ChatMessage = ({
           </Suspense>
         ) : (
           <>
-            {Array.isArray(videos) && videos.length > 0 && (
-              <div className="flex flex-col gap-3 mb-3">
-                {videos
-                  .filter((v, i, a) => a.indexOf(v) === i)
-                  .map((url, i) => (
-                    <SecureVideo
-                      key={`${url}-${i}`}
-                      src={url}
-                      controls
-                      playsInline
-                      preload="metadata"
-                      className="w-full max-w-[28rem] rounded-xl bg-background border border-border/40"
-                    />
-                  ))}
-              </div>
-            )}
             {Array.isArray(audios) && audios.length > 0 && (
               <div className="flex flex-col gap-2 mb-3">
                 {audios
@@ -1935,6 +1919,25 @@ const ChatMessage = ({
                 )
               );
             })()}
+
+            {/* Generated videos use the same visual order as images:
+                response text, final result, then the message actions. */}
+            {Array.isArray(videos) && videos.length > 0 && (
+              <div className="mt-3 flex w-full max-w-[42rem] flex-col gap-3">
+                {videos
+                  .filter((url, index, list) => list.indexOf(url) === index)
+                  .map((url, index) => (
+                    <SecureVideo
+                      key={`${url}-${index}`}
+                      src={url}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      className="w-full max-h-[70vh] rounded-xl bg-background border border-border/40 object-contain"
+                    />
+                  ))}
+              </div>
+            )}
 
             {/* Sources + Thinking buttons */}
             {!isStreaming && sourceLinks.length > 0 && (

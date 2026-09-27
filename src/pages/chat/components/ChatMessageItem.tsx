@@ -326,7 +326,17 @@ const ChatMessageItemImpl = ({
             hasMembers && msg.role === "user" && msg.user_id === chatUserId && i === showReadersIdx
           }
           bottomSlot={
-            msg.role === "assistant" && msg.docsArtifact ? (
+            msg.role === "assistant" && msg.mediaPlan ? (
+              <Suspense fallback={null}>
+                <AssistantMediaBlock
+                  msg={msg as any}
+                  setMessages={setMessages as any}
+                  setInput={setInput}
+                  setIsLoading={setIsLoading}
+                  setIsThinking={setIsThinking}
+                />
+              </Suspense>
+            ) : msg.role === "assistant" && msg.docsArtifact ? (
               <Suspense fallback={null}>
                 <DocsArtifactCard
                   artifactId={msg.docsArtifact.artifactId}
@@ -451,17 +461,6 @@ const ChatMessageItemImpl = ({
             <UpgradeRequiredCard feature={msg.paywall.feature} />
           </Suspense>
         </div>
-      )}
-      {msg.role === "assistant" && msg.mediaPlan && (
-        <Suspense fallback={null}>
-          <AssistantMediaBlock
-            msg={msg as any}
-            setMessages={setMessages as any}
-            setInput={setInput}
-            setIsLoading={setIsLoading}
-            setIsThinking={setIsThinking}
-          />
-        </Suspense>
       )}
       {msg.role === "assistant" && msg.docsClarify && (
         <Suspense fallback={null}>
