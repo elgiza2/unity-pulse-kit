@@ -1245,11 +1245,17 @@ const ChatMessage = ({
                 dir={langDir(l)}
                 lang={l === "ar" ? "ar" : l === "en" ? "en" : undefined}
                 className={`px-4 py-2.5 rounded-3xl rounded-bl-lg text-[0.9375rem] leading-relaxed select-text break-words user-bubble lang-${l}`}
-                style={
-                  bubbleColor
-                    ? { background: bubbleColor.bg, color: bubbleColor.text }
-                    : { background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }
-                }
+                 style={
+                   bubbleColor
+                     ? { background: bubbleColor.bg, color: bubbleColor.text }
+                     : {
+                         background:
+                           "linear-gradient(135deg, hsl(340 82% 56%) 0%, hsl(15 88% 55%) 55%, hsl(22 95% 55%) 100%)",
+                         color: "#ffffff",
+                         boxShadow:
+                           "0 1px 0 hsl(0 0% 100% / 0.18) inset, 0 10px 26px -10px hsl(340 82% 56% / 0.55), 0 4px 14px -6px hsl(22 95% 55% / 0.45)",
+                       }
+                 }
               >
                 <UserMarkdown content={content} onLinkClick={handleLinkClick} />
               </div>
@@ -1309,9 +1315,12 @@ const ChatMessage = ({
                   onTouchMove={handleLongPressMove}
                   onTouchCancel={clearLongPress}
                   onClick={handleBubbleClick}
-                  style={{
-                    background: "var(--user-bubble, #2563eb)",
-                    color: "var(--user-bubble-text, #ffffff)",
+                   style={{
+                     background:
+                       "var(--user-bubble, linear-gradient(135deg, hsl(340 82% 56%) 0%, hsl(15 88% 55%) 55%, hsl(22 95% 55%) 100%))",
+                     color: "var(--user-bubble-text, #ffffff)",
+                     boxShadow:
+                       "0 1px 0 hsl(0 0% 100% / 0.18) inset, 0 10px 26px -10px hsl(340 82% 56% / 0.55), 0 4px 14px -6px hsl(22 95% 55% / 0.45)",
                     WebkitTouchCallout: "none",
                     WebkitUserSelect: "none",
                     userSelect: "none",

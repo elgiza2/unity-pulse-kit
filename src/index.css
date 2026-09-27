@@ -7,6 +7,7 @@
    from the service-worker cache, so they never block the first frame. */
 @import "./styles/page-transitions.css";
 @import "./styles/landing-typography.css";
+@import "./styles/chat-vivid.css";
 
 @import "tailwindcss";
 @config "../tailwind.config.ts";
