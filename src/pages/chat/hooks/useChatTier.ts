@@ -46,6 +46,14 @@ export function useChatTier() {
     }
   }, [userPlan, researchDepth]);
 
+  // Free/trial users are limited to the Lite tier — snap back if a paid
+  // tier is somehow selected (e.g. restored from an old preference).
+  useEffect(() => {
+    if (megsyTier !== "lite" && !isPaidUser(userPlan)) {
+      setMegsyTier("lite");
+    }
+  }, [userPlan, megsyTier]);
+
 
   return {
     megsyTier,
