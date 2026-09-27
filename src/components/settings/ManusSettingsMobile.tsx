@@ -122,12 +122,11 @@ const ManusSettingsMobile = () => {
     {
       icon: themeMode === "dark" ? Moon : Sun,
       label: "Appearance",
-      trailing: themeMode === "dark" ? "Dark" : themeMode === "system" ? "System" : "Light",
+      trailing: themeMode === "dark" ? "Dark" : "Light",
       chevron: "none",
       control: "switch",
       onClick: () => {
-        const next: ThemeMode =
-          themeMode === "light" ? "dark" : themeMode === "dark" ? "system" : "light";
+        const next: ThemeMode = themeMode === "dark" ? "light" : "dark";
         setThemeMode(next);
         setTheme(next);
       },
