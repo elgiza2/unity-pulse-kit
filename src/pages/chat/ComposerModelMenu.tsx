@@ -189,9 +189,9 @@ export default function ComposerModelMenu({
                 <div className="fixed inset-0 z-[9998]" onClick={() => onOpenChange(false)} />
                 <motion.div
                   data-tier-menu
-                  initial={{ opacity: 0, y: pos.bottom != null ? 6 : -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: pos.bottom != null ? 6 : -6 }}
+                   initial={{ opacity: 0, y: pos.bottom != null ? 8 : -8, scale: 0.94 }}
+                   animate={{ opacity: 1, y: 0, scale: 1 }}
+                   exit={{ opacity: 0, y: pos.bottom != null ? 8 : -8, scale: 0.94 }}
                   transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
                   style={{
                     position: "fixed",
@@ -207,7 +207,7 @@ export default function ComposerModelMenu({
                     WebkitBackdropFilter: "none",
                     boxShadow:
                       "0 24px 64px -24px hsl(var(--foreground) / 0.35), 0 4px 16px -8px hsl(var(--foreground) / 0.18)",
-                    transformOrigin: pos.bottom != null ? "bottom center" : "top center",
+                    transformOrigin: pos.bottom != null ? "bottom left" : "top left",
                   }}
                   className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[22px] p-2"
                 >
