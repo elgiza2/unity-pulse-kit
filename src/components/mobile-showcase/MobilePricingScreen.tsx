@@ -250,10 +250,10 @@ export default function MobilePricingScreen({
         @media (prefers-reduced-motion: reduce) { .mps-rise { animation: none; } }
       `}</style>
 
-      {/* Header */}
+      {/* Header — same fixed bar + button spot as the chat mobile header */}
       <header
-        className="relative z-10 shrink-0 px-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 2px)" }}
+        className="fixed inset-x-0 z-30 flex min-h-[44px] items-center px-3 py-1.5 pt-[max(env(safe-area-inset-top),0.25rem)]"
+        style={{ top: "var(--promo-banner-h, 0px)" }}
       >
         <MobileSidebarButton
           onClick={() => onMenuClick?.()}
@@ -261,6 +261,8 @@ export default function MobilePricingScreen({
           className="text-foreground"
         />
       </header>
+      {/* Spacer so content clears the fixed header */}
+      <div className="shrink-0" style={{ height: "calc(max(env(safe-area-inset-top), 0.25rem) + 44px)" }} />
 
       <main className="relative z-10 mx-auto flex w-full max-w-[400px] flex-1 flex-col px-5">
         {/* Megsy star mark */}

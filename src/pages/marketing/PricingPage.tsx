@@ -21,7 +21,6 @@ import { usePromoCountdown } from "@/hooks/usePromoCountdown";
 import { usePrefetchOnIdle } from "@/hooks/usePrefetchOnIdle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobilePricingScreen from "@/components/mobile-showcase/MobilePricingScreen";
-import MobilePushShell from "@/components/layout/MobilePushShell";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
 import type { Gateway } from "@/components/billing/PaymentGatewaySheet";
@@ -390,13 +389,16 @@ const PricingPage = () => {
         <Helmet>
           <script type="application/ld+json">{JSON.stringify(pricingLd)}</script>
         </Helmet>
-        <MobilePushShell
-          open={mobileOpen}
-          onOpenChange={setMobileOpen}
-          onNewChat={() => navigate("/")}
-          currentMode="chat"
-        >
-          <MobilePricingScreen
+        {/* Same overlay sidebar the chat page uses on mobile. */}
+        <div className="md:hidden">
+          <AppSidebar
+            open={mobileOpen}
+            onClose={() => setMobileOpen(false)}
+            onNewChat={() => navigate("/")}
+            currentMode="chat"
+          />
+        </div>
+        <MobilePricingScreen
             isYearly={isYearly}
             onToggleYearly={setIsYearly}
             loadingTier={loadingTier}
@@ -408,7 +410,6 @@ const PricingPage = () => {
             }
             onMenuClick={() => setMobileOpen(true)}
           />
-        </MobilePushShell>
         <Suspense fallback={null}>
           {gatewaySheet && (
             <PaymentGatewaySheet

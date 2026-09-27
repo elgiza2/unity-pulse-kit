@@ -13,7 +13,6 @@ import { translateExactText, useUserLang } from "@/lib/authI18n";
 import { supabase } from "@/integrations/supabase/client";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
-import MobilePushShell from "@/components/layout/MobilePushShell";
 import MobileSidebarButton from "@/components/shared/MobileSidebarButton";
 import { safeCopyText } from "@/lib/safeClipboard";
 import {
@@ -256,7 +255,6 @@ const ReferralsPage = () => {
   const { pathname } = useLocation();
   const onRewards = pathname.endsWith("/rewards");
   const lang = useUserLang();
-  const isRtlUi = lang === "ar-eg";
   const milestone = useReferralMilestone();
   const [userId, setUserId] = useState<string | null>(null);
   const [code, setCode] = useState("");
@@ -461,13 +459,7 @@ const ReferralsPage = () => {
           className="fixed inset-x-0 z-30 flex min-h-[44px] items-center bg-background px-3 py-1.5 pt-[max(env(safe-area-inset-top),0.25rem)]"
           style={{ top: "var(--promo-banner-h, 0px)" }}
         >
-          {!sidebarOpen && (
-            <MobileSidebarButton
-              edge
-              side={isRtlUi ? "right" : "left"}
-              onClick={() => setSidebarOpen(true)}
-            />
-          )}
+          <MobileSidebarButton onClick={() => setSidebarOpen(true)} />
         </div>
       )}
 
@@ -493,17 +485,18 @@ const ReferralsPage = () => {
           </main>
         </div>
       ) : (
-        <MobilePushShell
-          open={sidebarOpen}
-          onOpenChange={setSidebarOpen}
-          mobileSide={isRtlUi ? "right" : "left"}
-          onNewChat={() => navigate("/")}
-          currentMode="chat"
-        >
-          <div className="min-h-[100dvh] bg-background text-foreground">
-            {content}
+        <div className="min-h-[100dvh] bg-background text-foreground">
+          {/* Same overlay sidebar the chat page uses on mobile. */}
+          <div className="md:hidden">
+            <AppSidebar
+              open={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
+              onNewChat={() => navigate("/")}
+              currentMode="chat"
+            />
           </div>
-        </MobilePushShell>
+          {content}
+        </div>
       )}
 
 
