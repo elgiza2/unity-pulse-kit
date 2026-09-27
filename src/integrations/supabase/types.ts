@@ -9556,6 +9556,57 @@ export type Database = {
         }
         Relationships: []
       }
+      test_agent_messages: {
+        Row: {
+          created_at: string
+          id: string
+          message: Json
+          message_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: Json
+          message_id: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: Json
+          message_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      test_agent_sandboxes: {
+        Row: {
+          created_at: string
+          sandbox_id: string
+          stream_url: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          sandbox_id: string
+          stream_url?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          sandbox_id?: string
+          stream_url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       tool_landing_images: {
         Row: {
           description: string | null
