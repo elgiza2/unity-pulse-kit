@@ -2,6 +2,14 @@
    the center, while the word "ميغسي" in the OLD theme's accent color fades
    out with expanding letter margins. Driven by src/lib/theme.ts. */
 
+/* Mask gradient stops can't interpolate directly, so the sweep is driven by
+   animating a registered custom property inside the gradient. */
+@property --theme-sweep-p {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 150%;
+}
+
 .theme-sweep-overlay {
   position: fixed;
   inset: 0;
@@ -10,40 +18,6 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  /* The mask starts fully open at the edges and closes toward the center,
-     so the new color appears to pour in from the screen edges. */
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
-  mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
-  animation: theme-sweep-in 0.65s cubic-bezier(0.65, 0, 0.35, 1) forwards,
-    theme-sweep-out 0.35s ease 0.75s forwards;
-}
-
-@keyframes theme-sweep-in {
-  0% {
-    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
-    mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
-    opacity: 1;
-  }
-  100% {
-    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 1%);
-    mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 1%);
-    opacity: 1;
-  }
-}
-
-/* Mask gradients can't interpolate their stops, so the sweep is actually
-   driven by animating a CSS custom property inside the gradient. */
-@supports (background: paint(worklet)) {
-  /* no-op — fallback below covers all browsers via the registered property */
-}
-
-@property --theme-sweep-p {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 150%;
-}
-
-.theme-sweep-overlay {
   --theme-sweep-p: 150%;
   -webkit-mask-image: radial-gradient(
     circle at 50% 50%,
