@@ -23,7 +23,7 @@ export default function WelcomeShowcasePage() {
     <FeatureShowcase
       onFinish={async (target) => {
         try {
-          localStorage.setItem("megsy_seen_welcome", "1");
+          localStorage.setItem("megsy_seen_welcome_v2", "1");
         } catch {}
         // Already signed in → go straight to the app instead of the auth screen.
         let signedIn = false;
