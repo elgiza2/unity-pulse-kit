@@ -98,7 +98,7 @@ const DEFERRED_FONTS_SCRIPT = `(function () {
   else window.addEventListener("load", go, { once: true });
 })();`;
 
-const SNAPSHOT_RESTORE_SCRIPT_REMOVED = `(function () {
+const SPECULATION_SCRIPT = `(function () {
   try {
     var nav = navigator;
     var c = nav.connection || {};
