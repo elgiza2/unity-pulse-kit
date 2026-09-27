@@ -1,0 +1,118 @@
+/* Theme switch transition — new theme color sweeps in from the edges toward
+   the center, while the word "ميغسي" in the OLD theme's accent color fades
+   out with expanding letter margins. Driven by src/lib/theme.ts. */
+
+.theme-sweep-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* The mask starts fully open at the edges and closes toward the center,
+     so the new color appears to pour in from the screen edges. */
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
+  mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
+  animation: theme-sweep-in 0.65s cubic-bezier(0.65, 0, 0.35, 1) forwards,
+    theme-sweep-out 0.35s ease 0.75s forwards;
+}
+
+@keyframes theme-sweep-in {
+  0% {
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
+    mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 0%);
+    opacity: 1;
+  }
+  100% {
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 1%);
+    mask-image: radial-gradient(circle at 50% 50%, transparent 0%, #000 1%);
+    opacity: 1;
+  }
+}
+
+/* Mask gradients can't interpolate their stops, so the sweep is actually
+   driven by animating a CSS custom property inside the gradient. */
+@supports (background: paint(worklet)) {
+  /* no-op — fallback below covers all browsers via the registered property */
+}
+
+@property --theme-sweep-p {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 150%;
+}
+
+.theme-sweep-overlay {
+  --theme-sweep-p: 150%;
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent var(--theme-sweep-p),
+    #000 var(--theme-sweep-p)
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent var(--theme-sweep-p),
+    #000 var(--theme-sweep-p)
+  );
+  animation: theme-sweep-close 0.65s cubic-bezier(0.65, 0, 0.35, 1) forwards,
+    theme-sweep-out 0.35s ease 0.8s forwards;
+}
+
+@keyframes theme-sweep-close {
+  from {
+    --theme-sweep-p: 150%;
+  }
+  to {
+    --theme-sweep-p: -1%;
+  }
+}
+
+@keyframes theme-sweep-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Browsers without @property (older Safari/Firefox): fall back to a simple
+   fade so the transition still looks clean instead of snapping. */
+@supports not (background: var(--theme-sweep-p)) {
+  .theme-sweep-overlay {
+    animation: theme-sweep-out 0.35s ease 0.45s forwards;
+  }
+}
+
+.theme-sweep-word {
+  font-weight: 700;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  letter-spacing: 0.02em;
+  animation: theme-word-fade 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: opacity, letter-spacing, transform;
+}
+
+@keyframes theme-word-fade {
+  0% {
+    opacity: 0;
+    letter-spacing: 0.02em;
+    transform: scale(0.96);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    letter-spacing: 0.45em;
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-sweep-overlay,
+  .theme-sweep-word {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+}
