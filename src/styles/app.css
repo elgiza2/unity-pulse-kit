@@ -22,6 +22,9 @@
 @import "./mobile-sunset-buttons.css";
 /* Light (white + pink) theme layer — after every legacy dark sheet. */
 @import "./light-theme.css";
+/* Chat accent layer must follow every legacy/theme sheet so their
+   !important bubble and composer rules cannot flatten it back to grey. */
+@import "./chat-vivid.css";
 /* Device-tier layer last, so nothing re-adds the expensive decorative effects
    it strips on weak devices. */
 @import "./perf-tier.css";
