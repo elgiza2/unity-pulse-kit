@@ -30,5 +30,5 @@ html[data-perf="low"] .desktop-fastshot-card{backdrop-filter:blur(52px) saturate
 .desktop-fastshot-empty .desktop-fastshot-tools{position:relative;top:auto;left:auto;right:auto;height:34px;display:flex;align-items:center}
 .desktop-fastshot-empty .desktop-fastshot-mode{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:999px;background:oklch(1 0 0/.14);border:1px solid oklch(1 0 0/.2);color:oklch(.98 0 0);font-size:13px;font-weight:500;position:relative;z-index:2}
 .desktop-fastshot-empty .desktop-fastshot-mode button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:15px;line-height:1;padding:0;opacity:.75}
-html body .desktop-fastshot-empty .desktop-fastshot-starters button[data-active="true"]{background:oklch(.98 0 0/.92)!important;color:oklch(.18 0 0)!important;border-color:transparent!important}
-html body .desktop-fastshot-empty .desktop-fastshot-starters button[data-active="true"] *{color:oklch(.18 0 0)!important}
+html body .desktop-fastshot-empty .desktop-fastshot-starters button.bg-card[data-active="true"],html.light body .desktop-fastshot-empty .desktop-fastshot-starters button.bg-card[data-active="true"]{background:oklch(.98 0 0/.92)!important;background-color:oklch(.98 0 0/.92)!important;color:oklch(.18 0 0)!important;border-color:transparent!important}
+html body .desktop-fastshot-empty .desktop-fastshot-starters button.bg-card[data-active="true"] *{color:oklch(.18 0 0)!important}
