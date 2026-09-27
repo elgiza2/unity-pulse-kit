@@ -19,6 +19,7 @@ import { m as motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSkills, type Skill } from "@/hooks/useSkills";
+import { GITHUB_SKILLS } from "@/lib/githubSkills";
 import { SKILL_TOOLS, SKILL_MODELS } from "@/lib/skillTools";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,7 +32,6 @@ import { SubShell, SubCard, SubSection } from "@/components/settings/SubShell";
 import { useConfirm } from "@/components/common/ConfirmDialog";
 
 import { cn } from "@/lib/utils";
-import { SkillsAddMenu } from "./components/SkillsExtras";
 import { resolveSkillIcon, skillEmoji } from "@/lib/skillIcon";
 
 import { sanitizeErrorMessage } from "@/lib/sanitizeError";
@@ -307,19 +307,7 @@ export default function SkillsSettingsPage() {
     <SubShell
       title="Skills"
       subtitle="Experts Megsy calls automatically inside chat."
-      backTo="/chat"
-      action={
-        <SkillsAddMenu
-          onCreateWithMegsy={() => navigate("/settings/skills/new")}
-          onCreateFromFiles={(f) => handleImportZip(f)}
-          onFromLibrary={() => navigate("/settings/skills/library")}
-          onFromGithub={(url) =>
-            navigate("/settings/skills/new", {
-              state: { seed: `Build a skill from this GitHub repository: ${url}` },
-            })
-          }
-        />
-      }
+      backTo="/settings"
     >
       <input
         ref={fileInputRef}
@@ -358,36 +346,6 @@ export default function SkillsSettingsPage() {
       {/* Bento: create + quick actions */}
       <div className="grid grid-cols-2 gap-2.5">
         <button
-          onClick={() => navigate("/settings/skills/new")}
-          className="col-span-2 relative overflow-hidden rounded-[22px] px-5 py-5 text-left active:scale-[0.99] transition-transform"
-          style={{
-            background:
-              "linear-gradient(135deg, hsl(var(--primary) / 0.14), hsl(var(--primary) / 0.04) 55%, transparent)",
-          }}
-        >
-          <span
-            className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full blur-2xl"
-            style={{ background: "hsl(var(--primary) / 0.18)" }}
-          />
-          <span className="relative flex items-start gap-3.5">
-            <span className="shrink-0 w-12 h-12 rounded-[16px] grid place-items-center bg-primary text-primary-foreground shadow-sm">
-              <Wand2 className="w-[22px] h-[22px]" strokeWidth={1.8} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[16px] font-semibold text-[color:var(--mn-fg)]">
-                {isArabicUi ? "اعمل مهارة مع ميغسي" : "Create a skill with Megsy"}
-              </span>
-              <span className="mt-1 block text-[12.5px] leading-snug text-[color:var(--mn-muted)]">
-                {isArabicUi
-                  ? "اوصف الخبير اللي محتاجه — التعليمات والمحفزات والأدوات هتتكتب لك."
-                  : "Describe the expert you need — instructions, triggers and tools are written for you."}
-              </span>
-            </span>
-            <ChevronRight className="mt-3.5 w-4 h-4 shrink-0 text-[color:var(--mn-muted)]" />
-          </span>
-        </button>
-
-        <button
           onClick={() => navigate("/settings/skills/library")}
           className="rounded-[18px] bg-[var(--mn-card)] px-4 py-3.5 text-left active:scale-[0.98] transition-transform"
         >
@@ -398,10 +356,10 @@ export default function SkillsSettingsPage() {
             {isArabicUi ? "المكتبة" : "Library"}
           </span>
           <span className="block text-[11.5px] text-[color:var(--mn-muted)]">
-            {librarySkills.length > 0
+            {librarySkills.length + GITHUB_SKILLS.length > 0
               ? isArabicUi
-                ? `${librarySkills.length} جاهزة`
-                : `${librarySkills.length} ready-made`
+                ? `${librarySkills.length + GITHUB_SKILLS.length} جاهزة`
+                : `${librarySkills.length + GITHUB_SKILLS.length} ready-made`
               : isArabicUi
                 ? "المهارات الرسمية"
                 : "Official skills"}
@@ -483,19 +441,13 @@ export default function SkillsSettingsPage() {
           <p className="text-[12.5px] mt-1.5 text-[color:var(--mn-muted)] max-w-[280px] mx-auto leading-relaxed">
             {tab === "enabled"
               ? isArabicUi
-                ? "شغّل واحدة من تحت أو اعمل مهارة جديدة."
-                : "Turn one on below, or create a new one."
+                ? "شغّل واحدة من تحت."
+                : "Turn one on below."
               : isArabicUi
-                ? "اعمل أول خبير ليك أو ضيف مهارة من المكتبة الرسمية."
-                : "Create your first expert, or add one from the official library."}
+                ? "ضيف أول مهارة من المكتبة أو استورد ملف .zip."
+                : "Add your first skill from the library or import a .zip."}
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-            <button
-              onClick={() => navigate("/settings/skills/new")}
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold bg-primary text-primary-foreground"
-            >
-              <Plus className="w-3.5 h-3.5" /> {isArabicUi ? "اعمل مهارة" : "Create skill"}
-            </button>
             <button
               onClick={() => navigate("/settings/skills/library")}
               className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium bg-[color:var(--mn-sep)] text-[color:var(--mn-fg)]"
@@ -521,25 +473,6 @@ export default function SkillsSettingsPage() {
         </div>
       )}
 
-      {/* Inspiration */}
-      {visible.length > 0 && (
-        <div className="pt-1">
-          <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] mb-3 text-[color:var(--mn-muted)]">
-            Inspiration
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {SUGGESTIONS.slice(0, 6).map((s) => (
-              <button
-                key={s}
-                onClick={() => navigate("/settings/skills/new", { state: { seed: s } })}
-                className="inline-flex items-center gap-1.5 px-3.5 h-8 rounded-full text-[12.5px] bg-[color:var(--mn-sep)]/60 text-[color:var(--mn-muted)] active:scale-[0.96] transition-transform"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </SubShell>
   );
 }

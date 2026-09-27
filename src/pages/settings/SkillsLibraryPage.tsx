@@ -8,6 +8,7 @@ import { useSkills, type Skill } from "@/hooks/useSkills";
 import { getActiveWorkspaceId } from "@/lib/activeWorkspace";
 import { SubShell } from "@/components/settings/SubShell";
 import { sanitizeErrorMessage } from "@/lib/sanitizeError";
+import { GITHUB_SKILLS } from "@/lib/githubSkills";
 
 export default function SkillsLibraryPage() {
   const { mySkills, librarySkills, loading, reload } = useSkills();
@@ -45,7 +46,8 @@ export default function SkillsLibraryPage() {
   };
 
   const q = query.trim().toLowerCase();
-  const items = librarySkills.filter(
+  const all = [...librarySkills, ...GITHUB_SKILLS.filter((g) => !librarySkills.some((l) => l.name === g.name))];
+  const items = all.filter(
     (s) =>
       !q ||
       s.name.toLowerCase().includes(q) ||
@@ -55,8 +57,8 @@ export default function SkillsLibraryPage() {
   return (
     <SubShell
       title="Official library"
-      subtitle="Ready-made skills maintained by Megsy."
-      backTo="/chat"
+      subtitle="Top open-source skills, ready to add."
+      backTo="/settings/skills"
     >
       <div className="flex items-center gap-2 h-11 px-4 rounded-[14px] bg-[var(--mn-card)]">
         <Search className="w-4 h-4 text-[color:var(--mn-muted)] shrink-0" />
