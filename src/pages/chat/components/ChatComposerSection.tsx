@@ -90,7 +90,6 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
             <div className="desktop-fastshot-menu-anchor">{props.plusMenuOpen ? props.renderPlusMenu() : null}</div>
           </form>
         </main>
-        <footer className="desktop-fastshot-proof"><p>One workspace for ideas, research, media and code</p><div aria-label="Megsy capabilities"><span>CHAT</span><span>RESEARCH</span><span>IMAGES</span></div></footer>
       </div>
     </section>
   );
