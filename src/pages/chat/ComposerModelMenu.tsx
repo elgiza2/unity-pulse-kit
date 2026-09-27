@@ -9,7 +9,6 @@ import type { MediaModelChoice } from "@/components/chat/media/MediaModelPickerS
 import type { ChatMode } from "./chatConstants";
 import {
   CHAT_COMPOSER_MODEL_OPTIONS,
-  ComposerModelIcon,
   getChatModelDisplayLabel,
 } from "./chatConstants";
 
@@ -97,7 +96,7 @@ export default function ComposerModelMenu({
   const [pos, setPos] = useState<
     { left: number; width: number; top?: number; bottom?: number; maxHeight: number } | null
   >(null);
-  const MENU_W = typeof window !== "undefined" && window.innerWidth < 640 ? 260 : 300;
+  const MENU_W = typeof window !== "undefined" && window.innerWidth < 640 ? 280 : 300;
 
   useLayoutEffect(() => {
     if (!open || !btnRef.current) return;
@@ -106,7 +105,7 @@ export default function ComposerModelMenu({
       const vw = window.innerWidth;
       const vh = window.innerHeight;
       const isMobile = vw < 640;
-      const menuW = isMobile ? Math.min(260, vw - 24) : Math.min(MENU_W, vw - 24);
+      const menuW = isMobile ? Math.min(280, vw - 24) : Math.min(MENU_W, vw - 24);
       let left = r.left;
       if (align === "end") left = r.right - menuW;
       else if (align === "center") left = r.left + (r.width - menuW) / 2;
@@ -117,11 +116,11 @@ export default function ComposerModelMenu({
       // the menu should rise above it instead of being pushed off-screen below.
       const placeAbove = side === "top" || r.bottom > vh * 0.55;
       if (placeAbove) {
-        const bottom = vh - r.top + 10;
+        const bottom = vh - r.top + 6;
         const maxHeight = Math.min(cap, Math.max(220, r.top - 24));
         setPos({ left, width, bottom, maxHeight });
       } else {
-        const top = r.bottom + 10;
+        const top = r.bottom + 6;
         const maxHeight = Math.min(cap, Math.max(220, vh - top - 24));
         setPos({ left, width, top, maxHeight });
       }
@@ -177,11 +176,6 @@ export default function ComposerModelMenu({
         <ChevronDown
           className={`h-4 w-4 shrink-0 text-foreground/70 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-        {!noIcon && activeChatOption && (
-          <span data-model-icon className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-transparent border-0">
-            <ComposerModelIcon brand={activeChatOption.brand} />
-          </span>
-        )}
         <span data-model-label className="truncate tracking-tight text-foreground">{triggerLabel}</span>
       </button>
 
@@ -194,9 +188,9 @@ export default function ComposerModelMenu({
                 <div className="fixed inset-0 z-[9998]" onClick={() => onOpenChange(false)} />
                 <motion.div
                   data-tier-menu
-                  initial={{ opacity: 0, y: pos.bottom != null ? 6 : -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: pos.bottom != null ? 6 : -6 }}
+                   initial={{ opacity: 0, y: pos.bottom != null ? 8 : -8, scale: 0.94 }}
+                   animate={{ opacity: 1, y: 0, scale: 1 }}
+                   exit={{ opacity: 0, y: pos.bottom != null ? 8 : -8, scale: 0.94 }}
                   transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
                   style={{
                     position: "fixed",
@@ -207,18 +201,20 @@ export default function ComposerModelMenu({
                     width: pos.width ?? 260,
                     maxHeight: pos.maxHeight,
                     background: "hsl(var(--popover))",
-                    border: "1px solid hsl(var(--border))",
+                    border: "1px solid hsl(var(--border) / 0.7)",
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
-                    boxShadow: "0 18px 48px -24px hsl(var(--foreground) / 0.35)",
-                    transformOrigin: pos.bottom != null ? "bottom center" : "top center",
+                    boxShadow:
+                      "0 24px 64px -24px hsl(var(--foreground) / 0.35), 0 4px 16px -8px hsl(var(--foreground) / 0.18)",
+                    transformOrigin: pos.bottom != null ? "bottom left" : "top left",
                   }}
-                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[20px] p-1.5"
+                  className="tier-menu-card z-[9999] flex flex-col overflow-y-auto overscroll-contain rounded-[22px] p-2"
                 >
-                  <div className="px-2.5 pb-1 pt-1.5 text-[11px] font-medium tracking-wide text-foreground/65">
+                  <div className="px-3 pb-1.5 pt-2 text-[11px] font-semibold uppercase tracking-wider text-foreground/50">
                     Choose a model
                   </div>
 
+                  <div className="flex flex-col gap-1">
                   {CHAT_COMPOSER_MODEL_OPTIONS.map((item) => {
                     const locked = item.premium && (userPlan === "free" || userPlan === "trial");
                     const active =
@@ -239,36 +235,49 @@ export default function ComposerModelMenu({
                           onOpenChange(false);
                         }}
                         style={{
-                          background: "transparent",
                           border: 0,
-                          boxShadow: "none",
+                          boxShadow: active
+                            ? "inset 0 0 0 1px hsl(var(--primary) / 0.35)"
+                            : "inset 0 0 0 1px hsl(var(--foreground) / 0.06)",
                           marginTop: 0,
-                          opacity: locked ? 0.5 : 1,
+                          opacity: locked ? 0.55 : 1,
+                          background: active
+                            ? "hsl(var(--primary) / 0.1)"
+                            : "hsl(var(--foreground) / 0.03)",
                         }}
-                        className="flex w-full items-center gap-2.5 px-2 py-1.5 text-start transition-colors hover:bg-foreground/[0.02]"
+                        className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-start transition-all hover:bg-foreground/[0.07] active:scale-[0.98]"
                       >
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center">
-                          {locked ? (
-                            <Lock className="h-3.5 w-3.5 text-foreground/65" />
-                          ) : active ? (
-                            <Check className="h-[17px] w-[17px] text-primary" strokeWidth={2.8} />
-                          ) : null}
-                        </span>
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
                             <span
-                              className={`truncate text-[13px] leading-tight ${
+                              className={`truncate text-[13.5px] leading-tight ${
                                 active ? "font-semibold text-foreground" : "font-medium text-foreground/90"
                               }`}
                             >
                               {item.label}
                             </span>
+                            {item.premium && (
+                              <span className="rounded-md bg-amber-500/15 px-1.5 py-px text-[9px] font-bold tracking-wide shrink-0 whitespace-nowrap text-amber-600 dark:text-amber-400">
+                                PRO
+                              </span>
+                            )}
                           </span>
+                          <span className="mt-0.5 block truncate text-[11.5px] leading-tight text-foreground/55">
+                            {item.desc}
+                          </span>
+                        </span>
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center">
+                          {locked ? (
+                            <Lock className="h-3.5 w-3.5 text-foreground/55" />
+                          ) : active ? (
+                            <Check className="h-[17px] w-[17px] text-primary" strokeWidth={2.8} />
+                          ) : null}
                         </span>
                       </button>
                     );
 
                   })}
+                  </div>
 
                 </motion.div>
               </>
@@ -289,9 +298,9 @@ export default function ComposerModelMenu({
                 />
                 <motion.div
                   data-tier-menu
-                  initial={{ opacity: 0, y: side === "top" ? 8 : -8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: side === "top" ? 8 : -8, scale: 0.96 }}
+                   initial={{ opacity: 0, y: pos.bottom !== undefined ? 8 : -8, scale: 0.94 }}
+                   animate={{ opacity: 1, y: 0, scale: 1 }}
+                   exit={{ opacity: 0, y: pos.bottom !== undefined ? 8 : -8, scale: 0.94 }}
                   transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.6 }}
                   style={{
                     position: "fixed",
@@ -301,13 +310,15 @@ export default function ComposerModelMenu({
                     ...(pos.bottom !== undefined ? { bottom: pos.bottom } : {}),
                     maxHeight: pos.maxHeight,
                     scrollBehavior: "smooth",
-                    background: "var(--chat-claude-composer, #262627)",
-                    border: 0,
+                    background: "hsl(var(--popover))",
+                    border: "1px solid hsl(var(--border) / 0.7)",
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
-                    boxShadow: "none",
-                  }}
-                  className="z-[9999] rounded-2xl p-1.5 text-foreground overflow-y-auto overscroll-contain unified-menu-surface scrollbar-thin"
+                     boxShadow:
+                       "0 24px 64px -24px hsl(var(--foreground) / 0.35), 0 4px 16px -8px hsl(var(--foreground) / 0.18)",
+                     transformOrigin: pos.bottom !== undefined ? "bottom left" : "top left",
+                   }}
+                   className="z-[9999] rounded-[22px] p-2 text-foreground overflow-y-auto overscroll-contain scrollbar-thin"
                 >
 
                   {settingsPanel && (
@@ -352,7 +363,10 @@ export default function ComposerModelMenu({
                     exit={{ opacity: 0, x: 16 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
-                  <div className="flex flex-col">
+                  <div className="px-3 pb-1.5 pt-2 text-[11px] font-semibold uppercase tracking-wider text-foreground/50">
+                    Choose a model
+                  </div>
+                  <div className="flex flex-col gap-1">
                     {CHAT_COMPOSER_MODEL_OPTIONS.map((item) => {
                       const locked = item.premium && (userPlan === "free" || userPlan === "trial");
                       const active =
@@ -372,8 +386,32 @@ export default function ComposerModelMenu({
                             toast.success(`Selected: ${item.label}`);
                             onOpenChange(false);
                           }}
-                          className="group flex w-full items-center gap-2.5 px-2 py-1.5 text-left transition-colors hover:bg-foreground/[0.02]"
+                          style={{
+                            boxShadow: active
+                              ? "inset 0 0 0 1px hsl(var(--primary) / 0.35)"
+                              : "inset 0 0 0 1px hsl(var(--foreground) / 0.06)",
+                            opacity: locked ? 0.55 : 1,
+                            background: active
+                              ? "hsl(var(--primary) / 0.1)"
+                              : "hsl(var(--foreground) / 0.03)",
+                          }}
+                          className="group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all hover:bg-foreground/[0.07]"
                         >
+                          <span className="min-w-0 flex-1">
+                            <span className="flex items-center gap-1.5">
+                              <span className="block text-[13.5px] font-semibold leading-tight truncate tracking-tight text-foreground">
+                                {item.label}
+                              </span>
+                              {item.premium && (
+                                <span className="rounded-md bg-amber-500/15 px-1.5 py-px text-[9px] font-bold tracking-wide shrink-0 whitespace-nowrap text-amber-600 dark:text-amber-400">
+                                  PRO
+                                </span>
+                              )}
+                            </span>
+                            <span className="mt-0.5 block truncate text-[11.5px] leading-tight text-foreground/55">
+                              {item.desc}
+                            </span>
+                          </span>
                           <span className="flex h-5 w-5 shrink-0 items-center justify-center">
                             {locked ? (
                               <Lock className="h-3.5 w-3.5 text-foreground/55" />
@@ -381,13 +419,6 @@ export default function ComposerModelMenu({
                               <Check className="h-4 w-4 text-primary" strokeWidth={2.8} />
                             ) : null}
                           </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="flex items-center gap-1.5">
-                              <span className="block text-[13px] font-semibold leading-tight truncate tracking-tight text-foreground">
-                                {item.label}
-                              </span>
-                          </span>
-                        </span>
                         </button>
                       );
                     })}
