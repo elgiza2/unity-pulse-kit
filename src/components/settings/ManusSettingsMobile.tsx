@@ -100,10 +100,8 @@ const ManusSettingsMobile = () => {
   const mainRows: Row[] = [
     // Mail is hidden until its UI is reworked.
     // { icon: MailIcon, label: "Mail", trailing: "@megsyai.com", path: "/mail" },
-    { icon: KeyRound, label: "Passwords", path: "/settings/passwords" },
     { icon: Lightbulb, label: "Knowledge", path: "/settings/memory" },
     { icon: Bell, label: "Notifications", path: "/notifications" },
-    { icon: Database, label: "Data controls", path: "/settings/data" },
     { icon: PanelBottom, label: "Cloud browser", path: "/settings/cloud-browser" },
 
     { icon: Puzzle, label: "Skills", path: "/settings/skills" },
