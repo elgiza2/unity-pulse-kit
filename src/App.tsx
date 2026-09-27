@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense } from "react";
-import { BrowserRouter, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CostConfirmationHost } from "@/components/billing/CostConfirmationHost";
@@ -29,7 +29,6 @@ import {
   InternalLinkInterceptor,
 } from "@/routes-app/routeHelpers";
 import { AppRoutes } from "@/routes-app/AppRoutes";
-import { WELCOME_SEEN_KEY } from "@/pages/WelcomePage";
 import { applyTheme } from "@/lib/theme";
 import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { loadTikTokPixel, trackTikTokFunnelEvent } from "@/lib/analytics/tiktokPixel";
@@ -207,7 +206,6 @@ const App = () => {
                   <ConfirmProvider>
                     <ScrollToTop />
                     <PageViewTracker />
-                    <WelcomeGate />
                     <InternalLinkInterceptor />
                     <MarketingTypographyScope />
 
@@ -253,20 +251,3 @@ const App = () => {
 };
 
 export default App;
-
-function WelcomeGate() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  useEffect(() => {
-    if (location.pathname === "/welcome" || location.pathname === "/auth") return;
-    const t = window.setTimeout(() => {
-      try {
-        // First visit only — every user (guest or signed in) sees it once.
-        if (localStorage.getItem(WELCOME_SEEN_KEY)) return;
-        navigate("/welcome", { replace: true });
-      } catch { /* ignore */ }
-    }, 400);
-    return () => window.clearTimeout(t);
-  }, [location.pathname, navigate]);
-  return null;
-}
