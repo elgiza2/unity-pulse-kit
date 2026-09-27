@@ -326,13 +326,14 @@ export default function ComposerModelMenu({
                     ...(pos.bottom !== undefined ? { bottom: pos.bottom } : {}),
                     maxHeight: pos.maxHeight,
                     scrollBehavior: "smooth",
-                    background: "var(--chat-claude-composer, #262627)",
-                    border: 0,
+                    background: "hsl(var(--popover))",
+                    border: "1px solid hsl(var(--border) / 0.7)",
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
-                    boxShadow: "none",
+                    boxShadow:
+                      "0 24px 64px -24px hsl(var(--foreground) / 0.35), 0 4px 16px -8px hsl(var(--foreground) / 0.18)",
                   }}
-                  className="z-[9999] rounded-2xl p-1.5 text-foreground overflow-y-auto overscroll-contain unified-menu-surface scrollbar-thin"
+                  className="z-[9999] rounded-[22px] p-2 text-foreground overflow-y-auto overscroll-contain scrollbar-thin"
                 >
 
                   {settingsPanel && (
