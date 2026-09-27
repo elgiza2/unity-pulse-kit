@@ -10,6 +10,18 @@
   --chat-grad-c: 217 91% 60%;   /* sky blue */
 }
 
+/* Override the desktop "claude" skin's grey bubble variable (doubled
+   attribute selector beats its single [data-skin="claude"] rule). */
+[data-skin="claude"][data-skin="claude"] {
+  --user-bubble: linear-gradient(
+    135deg,
+    hsl(var(--chat-grad-a)) 0%,
+    hsl(15 88% 55%) 55%,
+    hsl(var(--chat-grad-b)) 100%
+  );
+  --user-bubble-text: #ffffff;
+}
+
 /* ── User message bubble: sunset gradient ── */
 .user-bubble.user-bubble,
 html.dark [data-shell="megsy"] .user-bubble.user-bubble,
