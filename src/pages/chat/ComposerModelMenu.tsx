@@ -97,7 +97,7 @@ export default function ComposerModelMenu({
   const [pos, setPos] = useState<
     { left: number; width: number; top?: number; bottom?: number; maxHeight: number } | null
   >(null);
-  const MENU_W = typeof window !== "undefined" && window.innerWidth < 640 ? 260 : 300;
+  const MENU_W = typeof window !== "undefined" && window.innerWidth < 640 ? 280 : 300;
 
   useLayoutEffect(() => {
     if (!open || !btnRef.current) return;
@@ -106,7 +106,7 @@ export default function ComposerModelMenu({
       const vw = window.innerWidth;
       const vh = window.innerHeight;
       const isMobile = vw < 640;
-      const menuW = isMobile ? Math.min(260, vw - 24) : Math.min(MENU_W, vw - 24);
+      const menuW = isMobile ? Math.min(280, vw - 24) : Math.min(MENU_W, vw - 24);
       let left = r.left;
       if (align === "end") left = r.right - menuW;
       else if (align === "center") left = r.left + (r.width - menuW) / 2;
@@ -273,7 +273,7 @@ export default function ComposerModelMenu({
                               {item.label}
                             </span>
                             {item.premium && (
-                              <span className="rounded-md bg-amber-500/15 px-1.5 py-px text-[9px] font-bold tracking-wide text-amber-600 dark:text-amber-400">
+                              <span className="rounded-md bg-amber-500/15 px-1.5 py-px text-[9px] font-bold tracking-wide shrink-0 whitespace-nowrap text-amber-600 dark:text-amber-400">
                                 PRO
                               </span>
                             )}
@@ -428,7 +428,7 @@ export default function ComposerModelMenu({
                                 {item.label}
                               </span>
                               {item.premium && (
-                                <span className="rounded-md bg-amber-500/15 px-1.5 py-px text-[9px] font-bold tracking-wide text-amber-600 dark:text-amber-400">
+                                <span className="rounded-md bg-amber-500/15 px-1.5 py-px text-[9px] font-bold tracking-wide shrink-0 whitespace-nowrap text-amber-600 dark:text-amber-400">
                                   PRO
                                 </span>
                               )}
