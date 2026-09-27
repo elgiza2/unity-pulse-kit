@@ -469,7 +469,6 @@ export const AppRoutes = ({ currentUserId }: { currentUserId: string | null }) =
     {/* ── Legacy aliases — everything retired now redirects ──── */}
     <Route path="/landing" element={toChat} />
     <Route path="/showcase" element={toChat} />
-    <Route path="/welcome" element={toChat} />
     <Route path="/test" element={<SplashTestPage />} />
     {/* Hidden internal agent sandbox — not linked anywhere. */}
     <Route path="/test-agent" element={<TestAgentPage />} />
