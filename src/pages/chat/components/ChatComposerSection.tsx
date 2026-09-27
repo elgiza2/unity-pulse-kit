@@ -129,6 +129,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
 
   const isEmpty = messagesLength === 0 && !loadingMessages;
   const isDesktopLanding = messagesLength === 0 && !loadingMessages;
+  const isMobileViewport = Boolean((composerAnimatedInputProps as any).isMobileViewport);
   // Chips/modes bar visibility: always shown by default; user can toggle via the
   // modes button. Do NOT auto-hide based on active service — chatMode is
   // persisted in localStorage, so auto-hiding causes chips to disappear every
@@ -169,7 +170,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
 
   return (
     <ComposerComputerProvider>
-    {isDesktopLanding ? <DesktopFastshotComposer props={props} /> : null}
+    {isDesktopLanding && !isMobileViewport ? <DesktopFastshotComposer props={props} /> : null}
     <div
       style={{
         ["--sb-left" as any]: (sidebarOffset ?? (sidebarCollapsed ? 56 : 260)) + "px",
