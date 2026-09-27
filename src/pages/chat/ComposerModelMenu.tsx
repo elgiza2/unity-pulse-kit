@@ -177,11 +177,6 @@ export default function ComposerModelMenu({
         <ChevronDown
           className={`h-4 w-4 shrink-0 text-foreground/70 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
-        {!noIcon && activeChatOption && (
-          <span data-model-icon className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-transparent border-0">
-            <ComposerModelIcon brand={activeChatOption.brand} />
-          </span>
-        )}
         <span data-model-label className="truncate tracking-tight text-foreground">{triggerLabel}</span>
       </button>
 
@@ -253,16 +248,6 @@ export default function ComposerModelMenu({
                         }}
                         className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-start transition-all hover:bg-foreground/[0.07] active:scale-[0.98]"
                       >
-                        <span
-                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-                          style={{
-                            background: active
-                              ? "hsl(var(--primary) / 0.16)"
-                              : "hsl(var(--foreground) / 0.06)",
-                          }}
-                        >
-                          <ComposerModelIcon brand={item.brand} />
-                        </span>
                         <span className="min-w-0 flex-1">
                           <span className="flex items-center gap-1.5">
                             <span
