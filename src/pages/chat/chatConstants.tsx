@@ -273,7 +273,7 @@ export const CHAT_COMPOSER_MODEL_OPTIONS = [
     id: "pro",
     label: `${MEGSY_CHAT_MODEL_LABEL} 3.9`,
     desc: "For most tasks.",
-    premium: false,
+    premium: true,
     brand: "megsy" as const,
     strength: "Powerful" as const,
   },
