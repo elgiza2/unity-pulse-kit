@@ -299,9 +299,9 @@ export default function ComposerModelMenu({
                 />
                 <motion.div
                   data-tier-menu
-                  initial={{ opacity: 0, y: side === "top" ? 8 : -8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: side === "top" ? 8 : -8, scale: 0.96 }}
+                   initial={{ opacity: 0, y: pos.bottom !== undefined ? 8 : -8, scale: 0.94 }}
+                   animate={{ opacity: 1, y: 0, scale: 1 }}
+                   exit={{ opacity: 0, y: pos.bottom !== undefined ? 8 : -8, scale: 0.94 }}
                   transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.6 }}
                   style={{
                     position: "fixed",
@@ -315,10 +315,11 @@ export default function ComposerModelMenu({
                     border: "1px solid hsl(var(--border) / 0.7)",
                     backdropFilter: "none",
                     WebkitBackdropFilter: "none",
-                    boxShadow:
-                      "0 24px 64px -24px hsl(var(--foreground) / 0.35), 0 4px 16px -8px hsl(var(--foreground) / 0.18)",
-                  }}
-                  className="z-[9999] rounded-[22px] p-2 text-foreground overflow-y-auto overscroll-contain scrollbar-thin"
+                     boxShadow:
+                       "0 24px 64px -24px hsl(var(--foreground) / 0.35), 0 4px 16px -8px hsl(var(--foreground) / 0.18)",
+                     transformOrigin: pos.bottom !== undefined ? "bottom left" : "top left",
+                   }}
+                   className="z-[9999] rounded-[22px] p-2 text-foreground overflow-y-auto overscroll-contain scrollbar-thin"
                 >
 
                   {settingsPanel && (
