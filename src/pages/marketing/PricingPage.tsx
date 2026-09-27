@@ -21,7 +21,6 @@ import { usePromoCountdown } from "@/hooks/usePromoCountdown";
 import { usePrefetchOnIdle } from "@/hooks/usePrefetchOnIdle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobilePricingScreen from "@/components/mobile-showcase/MobilePricingScreen";
-import MobilePushShell from "@/components/layout/MobilePushShell";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
 import type { Gateway } from "@/components/billing/PaymentGatewaySheet";
