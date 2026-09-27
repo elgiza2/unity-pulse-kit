@@ -176,7 +176,7 @@ const KPage = () => {
         </div>
         <div className="pt-2">
           <div className="mb-1.5 px-1 text-[12px] font-medium text-foreground/60">
-            WaveSpeed — فيديو
+            موقع الصور والفيديو (WaveSpeed)
           </div>
           <Field
             name="ws"
