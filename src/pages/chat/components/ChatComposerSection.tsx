@@ -71,6 +71,16 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
           <h1>Describe anything. Megsy will build it.</h1>
           <form className="desktop-fastshot-card" onSubmit={(event) => { event.preventDefault(); send(); }}>
             <textarea value={value} onChange={(event) => c.setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); send(); } }} placeholder="Build a fintech tracking app with bank level privacy and..." aria-label="Message Megsy" rows={1} />
+            {props.attachedFiles.length > 0 ? (
+              <div className="desktop-fastshot-attachments">
+                {props.attachedFiles.map((f: any, i: number) => (
+                  <span key={i} className="desktop-fastshot-attachment">
+                    {f?.name ?? `File ${i + 1}`}
+                    <button type="button" aria-label="Remove attachment" onClick={() => props.removeAttachment(i)}>×</button>
+                  </span>
+                ))}
+              </div>
+            ) : null}
             <div className="desktop-fastshot-tools">
               <div className="desktop-fastshot-right">
                 <Button type="button" variant="ghost" className="desktop-fastshot-attach" aria-label="Attach files" onClick={() => { c.setPlusView("main"); c.setPlusMenuOpen(!c.plusMenuOpen); }}><Paperclip /></Button>
@@ -238,7 +248,7 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
 
             <div className="md:contents">
               <div ref={composerRef as any} className="relative z-[8] pointer-events-auto md:p-[1px] md:rounded-[28px]">
-                {plusMenuOpen ? renderPlusMenu() : null}
+                {plusMenuOpen && (!isDesktopLanding || isMobileViewport) ? renderPlusMenu() : null}
                 <div className="md:rounded-[27px] md:overflow-hidden">
 
 
