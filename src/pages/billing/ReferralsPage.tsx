@@ -13,7 +13,6 @@ import { translateExactText, useUserLang } from "@/lib/authI18n";
 import { supabase } from "@/integrations/supabase/client";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
-import MobilePushShell from "@/components/layout/MobilePushShell";
 import MobileSidebarButton from "@/components/shared/MobileSidebarButton";
 import { safeCopyText } from "@/lib/safeClipboard";
 import {
