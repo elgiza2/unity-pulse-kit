@@ -376,7 +376,7 @@ export const ComposerModelIcon = ({
     );
   }
   if (brand === "megsy") {
-    return <BrandLogo size={18} />;
+    return <BrandLogo className="h-[18px] w-[18px] object-contain" />;
   }
   return null;
 };
