@@ -21,7 +21,6 @@ html, body { background-color: #f3f3f5; margin: 0; }
 html[data-theme="dark"] { color-scheme: dark; }
 html[data-theme="dark"], html[data-theme="dark"] body { background-color: #1c1c1c; }
 html[data-theme="dark"] #root { background-color: #1c1c1c; }
-#root[data-snapshot-preview="true"] { pointer-events: none; user-select: none; contain: paint; }
 `;
 
 const THEME_BOOT_SCRIPT = `
@@ -466,7 +465,6 @@ function RootShell({ children }: { children: ReactNode }) {
           </defs>
         </svg>
         <div id="root">{children}</div>
-        <script dangerouslySetInnerHTML={{ __html: SNAPSHOT_RESTORE_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: SPECULATION_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: ADROLL_SCRIPT }} />
         <Scripts />

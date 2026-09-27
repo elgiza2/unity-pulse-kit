@@ -1,10 +1,8 @@
-import { useLocation, type Location } from "react-router-dom";
-import { useEffect, type ReactNode } from "react";
-import { isCacheablePath, scheduleSnapshotSave } from "@/lib/pageSnapshot";
+import type { ReactNode } from "react";
+import type { Location } from "react-router-dom";
 
 /**
- * PageTransition — wraps route content and captures a page snapshot for the
- * "instant open" cache.
+ * PageTransition — wraps route content.
  *
  * It deliberately does NOT re-key or animate the route container. Re-keying
  * unmounted and rebuilt the whole page on every section change, and the
@@ -14,39 +12,10 @@ import { isCacheablePath, scheduleSnapshotSave } from "@/lib/pageSnapshot";
  */
 const PageTransition = ({
   children,
-  location: locationProp,
 }: {
   children: ReactNode;
   location?: Location;
 }) => {
-  const routerLocation = useLocation();
-  const location = locationProp ?? routerLocation;
-
-  useEffect(() => {
-    const path = location.pathname;
-    if (!isCacheablePath(path)) return;
-    const capture = () => {
-      try {
-        const root = document.getElementById("root");
-        if (!root || document.getElementById("snapshot-preview")) return;
-        const html = root.innerHTML;
-        if (html) scheduleSnapshotSave(path, html);
-      } catch {}
-    };
-    const ric = (window as unknown as {
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
-      cancelIdleCallback?: (id: number) => void;
-    }).requestIdleCallback;
-    if (typeof ric === "function") {
-      const id = ric(capture, { timeout: 1800 });
-      return () => {
-        (window as unknown as { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id);
-      };
-    }
-    const id = window.setTimeout(capture, 900);
-    return () => window.clearTimeout(id);
-  }, [location.pathname]);
-
   return <>{children}</>;
 };
 
