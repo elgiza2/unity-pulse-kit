@@ -1296,6 +1296,52 @@ Deno.serve(async (req) => {
       return await handleVideo(req, createClient(SUPABASE_URL, SERVICE_KEY), body);
     }
 
+    // Admin probe: list image-capable WaveSpeed model ids so the image router
+    // can be mapped to the live catalogue. Auth + admin role enforced here.
+    if (body?.kind === "wavespeed_models") {
+      const authHeader = req.headers.get("authorization") ?? "";
+      const token = authHeader.replace(/^Bearer\s+/i, "");
+      let probeUserId: string | null = null;
+      if (token) {
+        const userClient = createClient(
+          SUPABASE_URL,
+          Deno.env.get("SUPABASE_ANON_KEY") ?? SERVICE_KEY,
+        );
+        const { data: userData } = await userClient.auth.getUser(token);
+        probeUserId = userData?.user?.id ?? null;
+      }
+      if (!probeUserId) return json({ error: true, message: "unauthorized" }, 401);
+      const adminProbe = createClient(SUPABASE_URL, SERVICE_KEY);
+      const { data: probeAdmin } = await adminProbe.rpc("has_role", {
+        _user_id: probeUserId,
+        _role: "admin",
+      });
+      if (!probeAdmin) return json({ error: true, message: "admin only" }, 403);
+      const waveKey = await resolveApiKey(adminProbe, "wavespeed");
+      if (!waveKey) return json({ error: true, message: "no active wavespeed key" }, 503);
+      const listRes = await fetch("https://api.wavespeed.ai/api/v3/models", {
+        headers: { Authorization: `Bearer ${waveKey}` },
+      });
+      const listText = await listRes.text();
+      if (!listRes.ok) return new Response(listText, { status: listRes.status, headers: { ...cors, "Content-Type": "application/json" } });
+      try {
+        const parsed = JSON.parse(listText);
+        const rows: any[] = Array.isArray(parsed?.data) ? parsed.data : [];
+        const images = rows
+          .filter((m) => /image/i.test(String(m?.type ?? "")))
+          .map((m) => ({
+            model_id: m?.model_id,
+            type: m?.type,
+            base_price: m?.base_price,
+            params: Object.keys(m?.api_schema?.api_schemas?.[0]?.request_schema?.properties ?? {}),
+          }));
+        return json({ count: images.length, models: images });
+      } catch {
+        return new Response(listText, { status: 200, headers: { ...cors, "Content-Type": "application/json" } });
+      }
+    }
+
+
     const prompt = String(body?.prompt ?? "").trim();
     if (!prompt) return json({ error: true, message: "prompt is required" }, 400);
 
