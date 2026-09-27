@@ -67,6 +67,7 @@ export function StarterChips({ onPick, className = "", activeMode }: StarterCard
             onClick={() => handleCardClick(c, onPick)}
             data-active={activeMode === c.mode ? "true" : undefined}
             aria-pressed={activeMode === c.mode}
+            style={activeMode === c.mode ? { background: "oklch(0.98 0 0 / 0.92)", borderColor: "transparent", color: "oklch(0.18 0 0)" } : undefined}
             className={chipClass}
           >
             <c.Icon className={iconClass} strokeWidth={1.75} />
