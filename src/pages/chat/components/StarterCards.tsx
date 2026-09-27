@@ -12,10 +12,11 @@ export interface StarterCardsProps {
   /** Activates the service chip for the picked card. */
   onPick: (prompt: string, mode?: string) => void;
   className?: string;
+  activeMode?: string;
 }
 
 /** Real services, reordered and shown with clean, recognisable icons. */
-const CARDS = [
+export const STARTER_CARDS = [
   { id: "image", mode: "images", Icon: Image, title: "Images", titleAr: "صور" },
   { id: "video", mode: "video", Icon: Video, title: "Video", titleAr: "فيديو" },
   { id: "web", mode: "code", Icon: Globe, title: "Website", titleAr: "موقع" },
@@ -24,7 +25,7 @@ const CARDS = [
 ];
 
 const handleCardClick = (
-  c: (typeof CARDS)[number],
+  c: (typeof STARTER_CARDS)[number],
   onPick: StarterCardsProps["onPick"],
 ) => {
   if (c.id === "integrations") {
@@ -47,7 +48,7 @@ const labelClass =
   "whitespace-nowrap text-[14px] font-medium text-foreground transition-colors";
 
 /** Desktop-only: compact icon chips shown below the composer (no images). */
-export function StarterChips({ onPick, className = "" }: StarterCardsProps) {
+export function StarterChips({ onPick, className = "", activeMode }: StarterCardsProps) {
   const isAr = useUserLang().startsWith("ar");
   return (
     <AnimatePresence initial={false}>
@@ -59,11 +60,14 @@ export function StarterChips({ onPick, className = "" }: StarterCardsProps) {
         transition={{ duration: 0.2, ease: "easeOut" }}
         className={`hidden md:flex flex-wrap items-center justify-center gap-2 ${className}`}
       >
-        {CARDS.map((c) => (
+        {STARTER_CARDS.map((c) => (
           <button
             key={c.id}
             type="button"
             onClick={() => handleCardClick(c, onPick)}
+            data-active={activeMode === c.mode ? "true" : undefined}
+            aria-pressed={activeMode === c.mode}
+            style={activeMode === c.mode ? { background: "oklch(0.98 0 0 / 0.92)", borderColor: "transparent", color: "oklch(0.18 0 0)" } : undefined}
             className={chipClass}
           >
             <c.Icon className={iconClass} strokeWidth={1.75} />
@@ -90,7 +94,7 @@ export function StarterCards({ onPick, className = "" }: StarterCardsProps) {
         dir={isAr ? "rtl" : "ltr"}
         className="scrollbar-hide flex w-full gap-2 overflow-x-auto px-3 py-1"
       >
-        {CARDS.map((c) => (
+        {STARTER_CARDS.map((c) => (
           <button
             key={c.id}
             type="button"
