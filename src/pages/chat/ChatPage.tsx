@@ -1378,6 +1378,15 @@ const ChatPage = () => {
 
   const isSubmittingRef = useRef(false);
   const slidesRunningRef = useRef(false);
+  const mediaTurnActiveRef = useRef(false);
+  const hasActiveMediaGeneration = messages.some((message) => {
+    if (!message.mediaPlan) return false;
+    if (message.mediaStatus === "awaiting" || message.mediaStatus === "running") return true;
+    return (message.mediaResults ?? []).some(
+      (result) => result.status === "pending" || result.status === "running",
+    );
+  });
+  const composerIsLoading = isLoading || hasActiveMediaGeneration;
   // Timestamp of the current send lock. If any branch forgets to release the
   // lock (thrown error, early return), the composer used to stay frozen until
   // a reload — the "send button hangs" bug. A stale lock is now ignored.
@@ -1395,7 +1404,9 @@ const ChatPage = () => {
         !getActiveComputerRun() &&
         !operatorRunId &&
         !activeResearchJobId &&
-        !slidesRunningRef.current
+        !slidesRunningRef.current &&
+        !mediaTurnActiveRef.current &&
+        !hasActiveMediaGeneration
       ) {
         isSubmittingRef.current = false;
         setIsLoading(false);
@@ -1403,7 +1414,7 @@ const ChatPage = () => {
       }
     }, 4000);
     return () => window.clearInterval(id);
-  }, [isLoading, operatorRunId, activeResearchJobId]);
+  }, [isLoading, operatorRunId, activeResearchJobId, hasActiveMediaGeneration]);
 
   const ownInsertedIdsRef = useRef<Set<string>>(new Set());
 
@@ -1438,7 +1449,12 @@ const ChatPage = () => {
         if (chatMode !== "normal" && chatMode !== "learning") handleModeChange("normal" as any);
       }
       setTimeout(() => {
-        if (!abortControllerRef.current && !getActiveComputerRun() && !slidesRunningRef.current) {
+        if (
+          !abortControllerRef.current &&
+          !getActiveComputerRun() &&
+          !slidesRunningRef.current &&
+          !mediaTurnActiveRef.current
+        ) {
           setIsLoading(false);
           setIsThinking(false);
         }
@@ -1872,6 +1888,7 @@ const ChatPage = () => {
         return;
       }
       try {
+        mediaTurnActiveRef.current = true;
         // آخر صورة مولّدة في المحادثة — تُستخدم تلقائيًا عند طلب تعديل عليها.
         let lastImageUrl: string | null = null;
         let lastImagePrompt: string | null = null;
@@ -1909,6 +1926,7 @@ const ChatPage = () => {
           ownInsertedIdsRef,
         });
       } finally {
+        mediaTurnActiveRef.current = false;
         isSubmittingRef.current = false;
       }
       return;
@@ -3017,7 +3035,7 @@ const ChatPage = () => {
               input,
               setInput,
               handleSend,
-              isLoading,
+              isLoading: composerIsLoading,
               activeResearchJobId,
               selectedModel,
               setSelectedModel,
@@ -3049,7 +3067,7 @@ const ChatPage = () => {
               chatUserId,
               conversationId,
               conversationTitle,
-              isLoading,
+              isLoading: composerIsLoading,
               isThinking,
               searchStatus,
               toolActivity,

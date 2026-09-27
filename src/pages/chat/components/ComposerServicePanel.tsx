@@ -88,7 +88,7 @@ export default function ComposerServicePanel({
   return (
     <div
       data-media-service-panel={showMediaPicker ? "true" : undefined}
-      className="mb-1 inline-flex h-8 w-fit max-w-full items-center gap-1.5 rounded-full bg-foreground/[0.05] pl-3 pr-1"
+      className="flex h-8 min-w-0 flex-1 items-center gap-1.5 bg-transparent"
     >
       {modeName ? (
         <span className="shrink-0 text-[12.5px] font-semibold text-foreground/70">{modeName}</span>
@@ -136,7 +136,7 @@ export default function ComposerServicePanel({
         type="button"
         onClick={onClear}
         aria-label={localizedLabel ? (isArabicUi ? `اقفل ${localizedLabel}` : `Close ${localizedLabel}`) : isArabicUi ? "اقفل الوضع" : "Close mode"}
-        className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-foreground/45 transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
+        className="ms-auto inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-foreground/45 transition-colors hover:bg-foreground/[0.08] hover:text-foreground"
       >
         <X className="w-3.5 h-3.5" strokeWidth={2.2} />
       </button>

@@ -283,23 +283,27 @@ export function ChatComposerSection(props: ChatComposerSectionProps) {
                 activeServiceHeader={
                   hasHeaderService || attachedFiles.length > 0 ? (
                     <>
-                      <ComposerServicePanel
-                        chatMode={d.chatMode}
-                        isDocsAgent={isDocsAgent}
-                        isDevAgent={isDevAgent}
-                        mediaModel={d.mediaModel ?? null}
-                        setMediaModel={d.setMediaModel}
-                        slidesTemplate={d.slidesTemplate}
-                        onOpenTemplatePicker={() => d.setSlidesPickerOpen?.(true)}
-                        onClear={() => {
-                          if (isDocsAgent || isDevAgent) d.setSelectedAgent?.(null);
-                          else d.handleModeChange("normal");
-                          setModesShown(true);
-                        }}
-                      />
-                      {(d.chatMode === "images" || d.chatMode === "video") && props.imageTools
-                        ? props.imageTools
-                        : null}
+                      {hasHeaderService ? (
+                        <div className="composer-active-service-bar -mx-3.5 flex min-h-11 w-[calc(100%+1.75rem)] items-center gap-2 border-b border-foreground/10 bg-foreground/[0.035] px-3.5 py-1.5 md:-mx-4 md:w-[calc(100%+2rem)] md:px-4">
+                          <ComposerServicePanel
+                            chatMode={d.chatMode}
+                            isDocsAgent={isDocsAgent}
+                            isDevAgent={isDevAgent}
+                            mediaModel={d.mediaModel ?? null}
+                            setMediaModel={d.setMediaModel}
+                            slidesTemplate={d.slidesTemplate}
+                            onOpenTemplatePicker={() => d.setSlidesPickerOpen?.(true)}
+                            onClear={() => {
+                              if (isDocsAgent || isDevAgent) d.setSelectedAgent?.(null);
+                              else d.handleModeChange("normal");
+                              setModesShown(true);
+                            }}
+                          />
+                          {(d.chatMode === "images" || d.chatMode === "video") && props.imageTools
+                            ? props.imageTools
+                            : null}
+                        </div>
+                      ) : null}
                       {attachedFiles.length > 0 ? (
                         <ComposerAttachments files={attachedFiles} onRemove={removeAttachment} />
                       ) : null}

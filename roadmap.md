@@ -53,6 +53,8 @@
 - Image models route through `anything-api`; slides cards render the real first slide.
 
 ## Open
+- [x] Keep the send button in its working state until image/video generation actually finishes.
+- [x] Make the active service selector a full-width top bar inside the composer.
 - [x] Desktop first chat screen: keep composer text and placeholder clearly white.
 - [x] Rebuild empty desktop chat (video, Megsy left, small Upgrade right, shortcuts under input; no nav links/footer).
 - [x] Restore the light chat palette, composer surface, chips, shadows, and serif greeting from the loving-bonds-app reference without changing chat behavior or the dark theme.
