@@ -53,6 +53,7 @@
 - Image models route through `anything-api`; slides cards render the real first slide.
 
 ## Open
+- [x] Rebuild empty desktop chat with a cinematic layout while keeping mobile independent.
 - [x] Restore the light chat palette, composer surface, chips, shadows, and serif greeting from the loving-bonds-app reference without changing chat behavior or the dark theme.
 - [x] Report the actual 48-person funnel: visit, signup start/completion, payment page/method, Vodafone Cash, and proof/order completion.
 - [ ] Track each page view's visitor country.

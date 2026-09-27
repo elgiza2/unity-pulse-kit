@@ -59,14 +59,10 @@ Consequences:
 
 ## 4. Front-end rules
 
-- Light chat visuals follow `loving-bonds-app`; keep dark-chat styling independent.
-- Language is English + Egyptian Arabic (`ar-eg`) via `useUserLang()`. Never
-  hard-code Arabic or English strings in a shared component.
-- Page snapshots: the pre-hydration snapshot paints into a separate
-  `#snapshot-preview` overlay. Never write into `#root` before React hydrates —
-  that causes a hydration mismatch.
-- SSR safety: browser-only libraries must be imported lazily behind the client
-  boot path; read `localStorage` in effects, not during render.
+- Light chat follows `loving-bonds-app`; empty desktop chat is cinematic and isolated from mobile.
+- Localize English and Egyptian Arabic (`ar-eg`) through `useUserLang()`.
+- Snapshots use `#snapshot-preview`; never write into `#root` before hydration.
+- Lazy-load browser-only libraries; read `localStorage` only in effects.
 
 ## 5. Checks before shipping
 
