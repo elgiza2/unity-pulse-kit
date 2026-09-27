@@ -42,7 +42,10 @@ const BackgroundJobNotifier = lazyWithRetry(
 /** Theme: light (white + pink) by default, dark available; auth screens always dark. */
 const useAppChrome = () => {
   useEffect(() => {
+    // The old page-snapshot overlay is gone for good — purge any entries
+    // still sitting in this browser's localStorage.
     document.getElementById("snapshot-preview")?.remove();
+    clearAllSnapshots();
     const root = document.getElementById("root");
     root?.removeAttribute("data-snapshot-preview");
     root?.removeAttribute("aria-busy");
