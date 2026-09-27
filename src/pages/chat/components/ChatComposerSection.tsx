@@ -79,7 +79,7 @@ function DesktopFastshotComposer({ props }: { props: ChatComposerSectionProps })
             </div>
             <div className="desktop-fastshot-menu-anchor">{props.plusMenuOpen ? props.renderPlusMenu() : null}</div>
           </form>
-          <StarterChips className="desktop-fastshot-starters" onPick={(_prompt, mode) => { if (mode) d.handleModeChange?.(mode); }} />
+          <StarterChips className="desktop-fastshot-starters" onPick={(prompt, mode) => { if (mode) d.handleModeChange?.(mode); if (prompt) c.setInput(prompt); }} />
         </main>
       </div>
     </section>
