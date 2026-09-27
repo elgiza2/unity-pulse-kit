@@ -238,7 +238,7 @@ const ManusSettingsMobile = () => {
             <div className="ms-plan-row">
               <span className="ms-plan-name">{planLabel}</span>
               <button type="button" className="ms-plan-cta" onClick={() => navigate("/pricing")}>
-                {"Upgrade"}
+                {planLabel === "Free" ? "Upgrade" : "Manage"}
               </button>
             </div>
             <button type="button" className="ms-row ms-row-div" onClick={() => navigate("/usage")}>
