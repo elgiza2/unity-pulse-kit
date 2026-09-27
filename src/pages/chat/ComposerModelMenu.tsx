@@ -378,7 +378,10 @@ export default function ComposerModelMenu({
                     exit={{ opacity: 0, x: 16 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
                   >
-                  <div className="flex flex-col">
+                  <div className="px-3 pb-1.5 pt-2 text-[11px] font-semibold uppercase tracking-wider text-foreground/50">
+                    Choose a model
+                  </div>
+                  <div className="flex flex-col gap-1">
                     {CHAT_COMPOSER_MODEL_OPTIONS.map((item) => {
                       const locked = item.premium && (userPlan === "free" || userPlan === "trial");
                       const active =
@@ -398,8 +401,42 @@ export default function ComposerModelMenu({
                             toast.success(`Selected: ${item.label}`);
                             onOpenChange(false);
                           }}
-                          className="group flex w-full items-center gap-2.5 px-2 py-1.5 text-left transition-colors hover:bg-foreground/[0.02]"
+                          style={{
+                            boxShadow: active
+                              ? "inset 0 0 0 1px hsl(var(--primary) / 0.35)"
+                              : "inset 0 0 0 1px hsl(var(--foreground) / 0.06)",
+                            opacity: locked ? 0.55 : 1,
+                            background: active
+                              ? "hsl(var(--primary) / 0.1)"
+                              : "hsl(var(--foreground) / 0.03)",
+                          }}
+                          className="group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all hover:bg-foreground/[0.07]"
                         >
+                          <span
+                            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                            style={{
+                              background: active
+                                ? "hsl(var(--primary) / 0.16)"
+                                : "hsl(var(--foreground) / 0.06)",
+                            }}
+                          >
+                            <ComposerModelIcon brand={item.brand} />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="flex items-center gap-1.5">
+                              <span className="block text-[13.5px] font-semibold leading-tight truncate tracking-tight text-foreground">
+                                {item.label}
+                              </span>
+                              {item.premium && (
+                                <span className="rounded-md bg-amber-500/15 px-1.5 py-px text-[9px] font-bold tracking-wide text-amber-600 dark:text-amber-400">
+                                  PRO
+                                </span>
+                              )}
+                            </span>
+                            <span className="mt-0.5 block truncate text-[11.5px] leading-tight text-foreground/55">
+                              {item.desc}
+                            </span>
+                          </span>
                           <span className="flex h-5 w-5 shrink-0 items-center justify-center">
                             {locked ? (
                               <Lock className="h-3.5 w-3.5 text-foreground/55" />
@@ -407,13 +444,6 @@ export default function ComposerModelMenu({
                               <Check className="h-4 w-4 text-primary" strokeWidth={2.8} />
                             ) : null}
                           </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="flex items-center gap-1.5">
-                              <span className="block text-[13px] font-semibold leading-tight truncate tracking-tight text-foreground">
-                                {item.label}
-                              </span>
-                          </span>
-                        </span>
                         </button>
                       );
                     })}
