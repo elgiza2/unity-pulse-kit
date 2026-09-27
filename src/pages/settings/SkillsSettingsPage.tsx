@@ -450,7 +450,7 @@ export default function SkillsSettingsPage() {
           <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
             <button
               onClick={() => navigate("/settings/skills/library")}
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium bg-[color:var(--mn-sep)] text-[color:var(--mn-fg)]"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-medium bg-[color:var(--mn-cta-bg)] text-[color:var(--mn-cta-fg)]"
             >
               {isArabicUi ? "المكتبة الرسمية" : "Official library"}
             </button>

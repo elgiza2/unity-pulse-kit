@@ -26,13 +26,13 @@ const __firstVisitWelcome = (() => {
     if (typeof window === "undefined") return false;
     const p = window.location.pathname.replace(/\/+$/, "") || "/";
     if (p !== "/" && p !== "/index" && p !== "/chat") return false;
-    if (localStorage.getItem("megsy_seen_welcome")) return false;
+    if (localStorage.getItem("megsy_seen_welcome_v2")) return false;
     // Signed-in users never see the first-run showcase, even on a new browser.
     if (__hasSession()) {
-      localStorage.setItem("megsy_seen_welcome", "1");
+      localStorage.setItem("megsy_seen_welcome_v2", "1");
       return false;
     }
-    localStorage.setItem("megsy_seen_welcome", "1");
+    localStorage.setItem("megsy_seen_welcome_v2", "1");
     window.history.replaceState(window.history.state, "", "/welcome");
     return true;
   } catch {

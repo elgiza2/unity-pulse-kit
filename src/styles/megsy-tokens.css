@@ -10,8 +10,8 @@
   --mn-muted: hsl(var(--muted-foreground));
   --mn-faint: hsl(var(--muted-foreground) / 0.72);
   --mn-sep: hsl(var(--border) / 0.6);
-  --mn-cta-bg: hsl(var(--primary));
-  --mn-cta-fg: hsl(var(--primary-foreground));
+  --mn-cta-bg: hsl(var(--foreground));
+  --mn-cta-fg: hsl(var(--background));
   --mn-seg: hsl(var(--muted));
   --mn-seg-active: hsl(var(--secondary));
   --mn-seg-active-fg: hsl(var(--foreground));
