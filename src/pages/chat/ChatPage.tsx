@@ -3218,7 +3218,7 @@ const ChatPage = () => {
               plusMenuOpen,
               setPlusMenuOpen,
               setPlusView,
-              isLoading,
+              isLoading: composerIsLoading,
               remoteAiBusy,
               activeResearchJobId,
               pendingQuestions,
