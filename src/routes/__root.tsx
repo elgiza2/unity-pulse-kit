@@ -98,7 +98,7 @@ const DEFERRED_FONTS_SCRIPT = `(function () {
   else window.addEventListener("load", go, { once: true });
 })();`;
 
-const SNAPSHOT_RESTORE_SCRIPT = `(function () {
+const SNAPSHOT_RESTORE_SCRIPT_REMOVED = `(function () {
   try {
     var p = (location.pathname || "/").split(/[?#]/)[0].replace(/\\/+$/, "") || "/";
     var deny = [
