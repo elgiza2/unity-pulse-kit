@@ -2647,8 +2647,9 @@ const ChatPage = () => {
     let r = composerRef.current?.getBoundingClientRect();
     // On the empty desktop (fastshot) state the dock composer is hidden, so
     // its rect is degenerate — anchor the menu to the glass input instead.
-    if (!r || (r.top === 0 && r.bottom === 0)) {
-      r = document.querySelector(".desktop-fastshot-card")?.getBoundingClientRect() ?? r;
+    const fastshotCard = document.querySelector(".desktop-fastshot-card");
+    if (fastshotCard || !r || r.top <= 0 || r.height === 0) {
+      r = fastshotCard?.getBoundingClientRect() ?? r;
     }
     if (isMobileViewport) {
       const vh = window.innerHeight;
