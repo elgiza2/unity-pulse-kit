@@ -199,18 +199,6 @@ export default function AssistantMediaBlock({ msg, setMessages, setInput, setIsL
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [generationKey, msg.id, msg.mediaStatus]);
 
-  // Leaving the page must not leave the composer locked in "generating".
-  // The in-flight lock itself is kept so a remount never double-charges a
-  // render that is still polling.
-  useEffect(
-    () => () => {
-      setIsLoading(false);
-      setIsThinking(false);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
   if (!msg.mediaPlan) return null;
 
   return (
