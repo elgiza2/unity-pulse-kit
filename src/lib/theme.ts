@@ -61,7 +61,45 @@ export const applyTheme = (mode: ThemeMode = getStoredTheme()): "light" | "dark"
   return theme;
 };
 
+/**
+ * Read a resolved color for a theme paint. `probe` creates a tiny element
+ * whose inline style references the token so we get the computed value for
+ * the CURRENT <html> theme classes.
+ */
+const probeColor = (cssValue: string): string => {
+  const el = document.createElement("div");
+  el.style.cssText = `position:absolute;visibility:hidden;color:${cssValue}`;
+  document.body.appendChild(el);
+  const v = getComputedStyle(el).color;
+  el.remove();
+  return v;
+};
+
+/**
+ * Edge-to-center theme sweep: the NEW theme's background pours in from the
+ * screen edges while "ميغسي" — painted in the OLD theme's accent color —
+ * fades out with expanding letter margins.
+ */
+const runThemeTransition = (oldAccent: string, newBackground: string): void => {
+  const overlay = document.createElement("div");
+  overlay.className = "theme-sweep-overlay";
+  overlay.style.background = newBackground;
+
+  const word = document.createElement("span");
+  word.className = "theme-sweep-word";
+  word.style.color = oldAccent;
+  word.textContent = "ميغسي";
+  overlay.appendChild(word);
+
+  document.body.appendChild(overlay);
+  window.setTimeout(() => overlay.remove(), 1400);
+};
+
 export const setTheme = (mode: ThemeMode): void => {
+  const after = resolveTheme(mode, window.location.pathname);
+  const current = document.documentElement.getAttribute("data-theme");
+  const oldAccent = probeColor("hsl(var(--primary))");
+
   try {
     localStorage.setItem(THEME_STORAGE_KEY, mode);
   } catch {
@@ -69,6 +107,12 @@ export const setTheme = (mode: ThemeMode): void => {
   }
   applyTheme(mode);
   window.dispatchEvent(new CustomEvent("megsy:theme", { detail: mode }));
+
+  // Only animate when the paint actually flips (e.g. light → dark).
+  if (current && current !== after) {
+    const newBackground = probeColor("hsl(var(--background))");
+    runThemeTransition(oldAccent, newBackground);
+  }
 };
 
 /**
