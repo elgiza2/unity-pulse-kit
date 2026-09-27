@@ -21,7 +21,6 @@ html, body { background-color: #f3f3f5; margin: 0; }
 html[data-theme="dark"] { color-scheme: dark; }
 html[data-theme="dark"], html[data-theme="dark"] body { background-color: #1c1c1c; }
 html[data-theme="dark"] #root { background-color: #1c1c1c; }
-#root[data-snapshot-preview="true"] { pointer-events: none; user-select: none; contain: paint; }
 `;
 
 const THEME_BOOT_SCRIPT = `
@@ -97,69 +96,6 @@ const DEFERRED_FONTS_SCRIPT = `(function () {
   }
   if (document.readyState === "complete") go();
   else window.addEventListener("load", go, { once: true });
-})();`;
-
-const SNAPSHOT_RESTORE_SCRIPT = `(function () {
-  try {
-    var p = (location.pathname || "/").split(/[?#]/)[0].replace(/\\/+$/, "") || "/";
-    var deny = [
-      "/auth","/login","/signin","/signup","/register","/oauth","/chat","/settings",
-      "/billing","/workspace","/library","/integrations","/agent","/apps","/mfa","/2fa",
-      "/reset-password","/change-password","/change-email","/delete-account",
-      "/accept-invite","/switch-account"
-    ];
-    for (var i = 0; i < deny.length; i++) {
-      if (p === deny[i] || p.indexOf(deny[i] + "/") === 0) return;
-    }
-    var key = "megsy:pagesnap:v1:" + p;
-    var raw = localStorage.getItem(key);
-    if (!raw) return;
-    var e = JSON.parse(raw);
-    if (!e || typeof e.html !== "string" || typeof e.sum !== "number") return;
-    var meta = document.querySelector('meta[name="megsy-build"]');
-    var build = meta ? meta.getAttribute("content") : "";
-    if (!build || build.indexOf("%") >= 0) {
-      build = "d_" + Math.floor(Date.now() / 86400000);
-    }
-    if (e.build !== build) { localStorage.removeItem(key); return; }
-    if (Date.now() - e.ts > 604800000) { localStorage.removeItem(key); return; }
-    var src = e.html + "|" + e.build;
-    var h = 0x811c9dc5;
-    for (var j = 0; j < src.length; j++) {
-      h ^= src.charCodeAt(j);
-      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
-    }
-    if ((h >>> 0) !== e.sum) { localStorage.removeItem(key); return; }
-    var tpl = document.createElement("template");
-    tpl.innerHTML = e.html;
-    tpl.content.querySelectorAll("script,iframe,object,embed,link,meta").forEach(function (el) { el.remove(); });
-    var blocked = { href: 1, src: 1, "xlink:href": 1, formaction: 1, poster: 1 };
-    tpl.content.querySelectorAll("*").forEach(function (el) {
-      for (var a = el.attributes.length - 1; a >= 0; a--) {
-        var n = el.attributes[a].name.toLowerCase();
-        var v = (el.attributes[a].value || "").trim().toLowerCase();
-        if (n.indexOf("on") === 0 || (blocked[n] && v.indexOf("javascript:") === 0)) {
-          el.removeAttribute(el.attributes[a].name);
-        }
-      }
-    });
-    // The snapshot is painted in its own overlay element — never inside #root,
-    // which React hydrates (mutating it before hydration breaks the match).
-    var layer = document.createElement("div");
-    layer.id = "snapshot-preview";
-    layer.setAttribute("aria-busy", "true");
-    layer.setAttribute("aria-hidden", "true");
-    layer.style.cssText = "position:fixed;inset:0;z-index:2147483000;overflow:hidden;background:var(--background,#0b0b0c)";
-    layer.appendChild(tpl.content);
-    document.body.appendChild(layer);
-    // Safety net: if the app never mounts (stale chunk, slow network, script
-    // error) this overlay would otherwise sit on screen forever and look like
-    // an endless load. Drop it after a short grace period no matter what.
-    setTimeout(function () {
-      var el = document.getElementById("snapshot-preview");
-      if (el) el.remove();
-    }, 4000);
-  } catch (err) {}
 })();`;
 
 const SPECULATION_SCRIPT = `(function () {
@@ -466,7 +402,6 @@ function RootShell({ children }: { children: ReactNode }) {
           </defs>
         </svg>
         <div id="root">{children}</div>
-        <script dangerouslySetInnerHTML={{ __html: SNAPSHOT_RESTORE_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: SPECULATION_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: ADROLL_SCRIPT }} />
         <Scripts />
