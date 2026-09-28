@@ -90,3 +90,8 @@
 - [ ] Arabic visitors: show prices in local currency detected from the device locale/timezone.
 - [x] Local currency beside USD prices (device country) — desktop + mobile pricing.
 - [x] Facebook-style next-hop prefetch replaces bulk chunk warming; loading fallback removed.
+
+## Nomi rebuild
+- [ ] Rebuild the product UI as Nomi inside the existing React SPA; do not introduce TanStack page architecture.
+- [ ] Keep the permanent chat as home, first-use welcome, contextual animated avatar, and calls screen.
+- [ ] Isolate all new persisted data in `nomi_*` tables without altering legacy Megsy tables.
